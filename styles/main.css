@@ -1,0 +1,127 @@
+@import url('./cli-section.css');
+/*  <<< CSS RESET FILE >>>  */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+ margin: 0;
+ padding: 0;
+ border: 0;
+ font-size: 100%;
+ font: inherit;
+ vertical-align: baseline;
+}
+HTML5 display-role reset for older browsers 
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+ display: block;
+}
+body {
+ line-height: 1;
+}
+ol, ul {
+ list-style: none;
+}
+blockquote, q {
+ quotes: none;
+}
+blockquotebefore, blockquoteafter,
+qbefore, qafter {
+ content: '';
+ content: none;
+}
+table {
+ border-collapse: collapse;
+ border-spacing: 0;
+}
+
+/*  <<< \CSS RESET FILE >>>  */
+
+
+:root{
+
+    --font-size: 16px;
+    --font-family: 'Consolas', 'Menlo', monospace;
+
+
+    /* Default colors */
+    --body-background-color: #121212;
+    --border-color: #83FF08;
+    --section-background-color: #0D1926;
+    --user-type-color: #fe8019;
+    --user-name-color: #83FF08;
+    --symbols-color: #d3869b;
+    --text-color: #B4E1FD;
+}
+* {
+    font-family: var(--font-family);
+}
+html{
+    overflow: hidden;
+}
+body{
+    min-height: 100vh;
+    box-sizing: border-box;
+    background-color: var(--body-background-color);
+    padding: clamp(20px,1rem,5vh);
+    overflow: hidden;
+}
+#content{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 95vh;
+    background-color: var(--section-background-color);
+    border: 2px solid var(--border-color);
+    border-radius: 15px;
+    padding: clamp(20px,1rem,5vh);
+    box-sizing: border-box;
+    overflow: auto;
+}
+section{
+    background-color: var(--section-background-color);
+}
+#cli-section{
+    border-right: 1px solid var(--border-color);
+    padding-right: clamp(20px,1rem,5vh);
+}
+#display-section{
+    padding-left: clamp(20px,1rem,5vh);
+}
+input{
+    background-color: transparent;
+    border: none;
+    color: var(--text-color);
+    font-size: var(--font-size);
+    font-family: var(--font-family);
+    margin: 0px;
+    padding: 0px;
+    outline: none;
+    width: 100%;
+}
+.cli-text{
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    font-size: var(--font-size);
+    font-family: var(--font-family);
+}
+.user-type{
+    color: var(--user-type-color);
+    margin-left: 2rem;
+}
+.symbols{
+    color: var(--symbols-color);
+}
+.user-name{
+    color: var(--user-name-color);
+}
+

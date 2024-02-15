@@ -1,0 +1,38 @@
+@import url('./main.css');
+.bst-control-div{
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+}
+.word-wrap-break{
+    word-wrap: break-word;
+}
+.bst-column-div{
+    display: flex;
+    flex-direction: column;
+}
+.lower-border{
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--text-color);
+    margin-bottom: 0.4rem;
+}
+.control-label{
+    white-space: nowrap;
+}
+.bst-input{
+    border-bottom: 1px solid var(--text-color);
+    margin-left: 2rem;
+    margin-right: 2rem;
+}
+.bst-btn{
+    white-space: nowrap;
+    font-family: var(--font-family);
+}
+.bst-main-control-div{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+    border: 2px solid var(--text-color);
+    padding: 2rem;
+}

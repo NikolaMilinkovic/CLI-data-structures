@@ -116,6 +116,7 @@ class CLIComponent {
 const CLI = new CLIComponent('cli-section');
 CLI.init();
 
+
 // Returns last input from the cli-section
 const cliSection = document.getElementById('cli-section');
 function returnLastInput() {

@@ -1,3 +1,4 @@
+/* eslint-disable no-else-return */
 /* eslint-disable brace-style */
 /* eslint-disable radix */
 /* eslint-disable default-param-last */
@@ -24,19 +25,27 @@ export default class Tree {
     }
 
     sortArray(arr) {
+        if (!Array.isArray(arr)) return parseInt(arr);
         return arr.sort((a, b) => a - b);
     }
 
     removeDuplicatesInArr(arr) {
+        if (!Array.isArray(arr)) return parseInt(arr);
         const newArray = [];
         arr.forEach((element) => {
             if (!newArray.includes(element)) newArray.push(element);
         });
-        return newArray;
+        return newArray.map((value) => parseInt(value));
+    }
+
+    // Sorts an array and removes all the duplicates from it
+    sortAndRemoveDuplicates(array) {
+        return this.removeDuplicatesInArr(this.sortArray(array));
     }
 
     // Method for inserting new values into the Tree
     insert(value, root = this.root) {
+        console.log('insert BST logic ran');
         if (root === null) {
             return new Node(value);
         }
@@ -52,45 +61,49 @@ export default class Tree {
 
     // Method for removing values from the Tree
     remove(value, root = this.root, parent = null) {
-        if (root === null || root === undefined) {
+        if (!root) {
             return false;
         }
 
         if (root.value === value) {
             // Removing leaf node
             if (root.left === null && root.right === null) {
-                if (parent.left === root) {
+                if (parent && parent.left === root) {
                     parent.setLeft(null);
                 } else {
                     parent.setRight(null);
                 }
+                return true;
             }
 
             // Removing node with one child
-            else if (root.left !== null && root.right === null) {
+            if (root.left !== null && root.right === null) {
                 root.value = root.left.value;
                 root.setRight(root.left.right);
                 root.setLeft(null);
+                return true;
             } else if (root.right !== null && root.left === null) {
                 root.value = root.right.value;
                 root.setLeft(root.right.left);
                 root.setRight(null);
+                return true;
             }
 
             // Removing node with two children
-            else {
-                const successor = this.getSmallest(root.right);
-                root.value = successor;
-                this.remove(successor, root.right, root);
-            }
+            const successor = this.getSmallest(root.right);
+            this.remove(successor, root.right, root);
+            root.value = successor;
             return true;
         }
+
         if (value < root.value) {
             return this.remove(value, root.left, root);
         }
         if (value > root.value) {
             return this.remove(value, root.right, root);
         }
+
+        return false;
     }
 
     // Method for searching the value inside the BST
@@ -234,25 +247,24 @@ export default class Tree {
 
     // Checks for BST balance and returns true / false
     isBalanced(root = this.root) {
+        if (root === null) return true;
+
         const leftSubtree = this.height(root.left);
         const rightSubtree = this.height(root.right);
 
-        if (leftSubtree === rightSubtree) return true;
-        if (leftSubtree + 1 === rightSubtree) return true;
-        if (leftSubtree - 1 === rightSubtree) return true;
-
-        return false;
+        return Math.abs(leftSubtree - rightSubtree) <= 1
+        && this.isBalanced(root.left)
+        && this.isBalanced(root.right);
     }
 
     // Method for that rebalances unbalanced tree
     rebalance() {
         const isBalanced = this.isBalanced();
-        console.log(isBalanced);
         if (isBalanced) return;
 
         this.inOrder();
         const arr = this.sortArray(this.removeDuplicatesInArr(this.inOrderValues));
-        this.root = buildTree(arr, 0, arr.length - 1);
+        this.root = buildTree(arr);
     }
 }
 
@@ -302,11 +314,7 @@ export const prettyPrint = (node, prefix = '', isLeft = true) => {
 
 // =======================[TESTING]======================= //
 const array = [10, 20, 30, 32, 34, 36, 40, 50, 60, 70, 80, 85];
-const array2 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 14, 16, 66, 77];
 const BST = new Tree(array);
-prettyPrint(BST.root);
-
-BST.rebuildTree(array2);
 prettyPrint(BST.root);
 
 export function getBST() {

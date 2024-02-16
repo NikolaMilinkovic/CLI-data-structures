@@ -1,6 +1,10 @@
 /* eslint-disable no-alert */
 import DisplaySection, { getDisplay } from './display-module.js';
+import HistoryTracker, { getHistory } from './history-tracker.js';
+import Themes, { getThemes } from './themes.js';
 
+const history = getHistory();
+const themes = getThemes();
 const display = getDisplay();
 
 const cliSection = document.getElementById('cli-section');
@@ -65,6 +69,8 @@ export default class CLIComponent {
             '       example:',
             '       run binary-search-tree',
             '   ',
+            '   To see a list of available algorithms type \'algorithms\'',
+            '   ',
             '   Type \'help\'for help and list of options/commands.',
         ];
 
@@ -114,7 +120,22 @@ export default class CLIComponent {
 
         para.appendChild(input);
         this.cli.appendChild(para);
+        this.addInputEventListener();
         input.focus();
+    }
+
+    addInputEventListener() {
+        const lastInput = returnLastInput();
+        this.inputListener = (event) => {
+            console.log(lastInput.value);
+        };
+
+        lastInput.addEventListener('input', this.inputListener);
+    }
+
+    removeInputEventListener() {
+        const lastInput = returnLastInput();
+        lastInput.removeEventListener('input', this.inputListener);
     }
     // =====================================[\CLI METHODS]===================================== //
 
@@ -126,9 +147,11 @@ export default class CLIComponent {
             'Available commands:',
             ' - help',
             ' - run [algorithm name]',
+            ' - algorithms',
             ' - clear',
             ' - git',
-            ' - theme',
+            ' - themes',
+            ' - theme [theme name]',
             ' - banner',
         ];
         return text.join('<br>');
@@ -140,6 +163,33 @@ export default class CLIComponent {
         para.classList.add('cli-text');
         para.classList.add('cli-mar-left-2rem');
         para.innerHTML = this.getHelpText();
+
+        this.cli.appendChild(para);
+    }
+
+    // Returns algorithms command text
+    getAlgorithmsText() {
+        const text = [
+            'Available algorithms:',
+            '   ',
+            ' - binary-search-tree',
+            ' - linked-list',
+            '   ',
+            'To select an algorithm type run [algorithm name]',
+            '   ',
+            '   example:',
+            '   run binary-search-tree',
+            '   ',
+        ];
+        return text.join('<br>');
+    }
+
+    // Displays algorith list on the screen
+    displayAlgorithms() {
+        const para = document.createElement('pre');
+        para.classList.add('cli-text');
+        para.classList.add('cli-mar-left-2rem');
+        para.innerHTML = this.getAlgorithmsText();
 
         this.cli.appendChild(para);
     }
@@ -199,6 +249,10 @@ export default class CLIComponent {
                 this.algorithmNotFound(parameter, para);
             }
         }
+        // Algorithms
+        else if (command === 'algorithms') {
+            this.displayAlgorithms();
+        }
         // Clear
         else if (command === 'clear') {
             this.clearCLI();
@@ -207,9 +261,22 @@ export default class CLIComponent {
         else if (command === 'git') {
             alert('pong!');
         }
-        // Theme
+        // Themes
+        else if (command === 'themes') {
+            const themesList = themes.getThemesList();
+            this.printLine('Available themes:', '', '   ');
+            themesList.forEach((theme) => {
+                this.printLine(theme, '', '     - ');
+            });
+        }
+        // Theme [theme name]
         else if (command === 'theme') {
-            alert('pong!');
+            const theme = themes.findTheme(parameter);
+            if (theme) themes.setTheme(theme);
+            else {
+                const fullCommand = command + parameter;
+                this.commandNotFound(fullCommand, para);
+            }
         }
         // Banner
         else if (command === 'banner') {
@@ -219,6 +286,16 @@ export default class CLIComponent {
         else {
             this.commandNotFound(command, para);
         }
+    }
+
+    // Method for creating and displaying a para element
+    printLine(input, className, indentation) {
+        const para = document.createElement('pre');
+        para.innerHTML = `${indentation}${input}`;
+        para.classList.add('cli-text');
+        para.classList.add('display-margins');
+        if (className !== '') para.classList.add(className);
+        this.cli.appendChild(para);
     }
     // =====================================[\CLI COMMANDS]===================================== //
 }
@@ -242,19 +319,43 @@ function focusLastInput(input) {
 
 // CLI enter event listener
 document.addEventListener('keypress', (e) => {
+    // Enter
     if (e.key === 'Enter') {
-        const lastInput = returnLastInput();
-        if (lastInput.value !== '') {
-            lastInput.disabled = true;
-            CLI.evaluateInput(lastInput.value);
-            CLI.createInput();
-        }
+        if (document.activeElement === returnLastInput()) CLI.removeInputEventListener();
+        handleEnterKey();
     }
 });
+
+// Arrow up & Arrow down event listener
+document.addEventListener('keydown', (e) => {
+    const lastInput = returnLastInput();
+    // Arrow up
+    if (e.key === 'ArrowUp') {
+        history.arrowUp();
+        history.displayHistoryInput(lastInput);
+    }
+    // Arrow down
+    else if (e.key === 'ArrowDown') {
+        history.arrowDown();
+        history.displayHistoryInput(lastInput);
+    }
+});
+
+function handleEnterKey() {
+    const lastInput = returnLastInput();
+    if (lastInput.value !== '') {
+        lastInput.disabled = true;
+        history.pushInputToHistory(lastInput.value);
+        history.resetHistoryTracker();
+        CLI.evaluateInput(lastInput.value);
+        CLI.createInput();
+    }
+}
+
 // CLI section click event listener
 cliSection.addEventListener('click', () => {
     const lastInput = returnLastInput();
     focusLastInput(lastInput);
 });
-// =====================================[\EVENT LISTENERS]===================================== //
 
+// =====================================[\EVENT LISTENERS]===================================== //

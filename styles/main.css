@@ -57,11 +57,11 @@ table {
 
     /* Default colors */
     --body-background-color: #121212;
-    --border-color: #83FF08;
-    --section-background-color: #0D1926;
-    --user-type-color: #fe8019;
-    --user-name-color: #83FF08;
-    --symbols-color: #d3869b;
+    --border-color: #67E480;
+    --section-background-color: #191622;
+    --user-type-color: #FF79C6;
+    --user-name-color: #67E480;
+    --symbols-color: #ABB2BF;
     --text-color: #B4E1FD;
 }
 * {

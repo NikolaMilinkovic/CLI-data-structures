@@ -18,6 +18,7 @@
 }
 .control-label{
     white-space: nowrap;
+    width: 180px;
 }
 .bst-input{
     border-bottom: 1px solid var(--text-color);
@@ -38,4 +39,12 @@
     margin-top: 2rem;
     border: 2px solid var(--text-color);
     padding: 2rem;
+}
+#input-balanced::placeholder{
+}
+.input-balanced-color::placeholder{
+    color: #08FF83 !important;
+}
+.input-unbalanced-color::placeholder{
+    color: #FF1E8E !important;
 }

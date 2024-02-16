@@ -4,6 +4,7 @@ import {
     createPara, createInput, createButton, appendChildren, createDiv, addListener, addThisListener,
 } from './element-builder.js';
 import { getBST } from './bst.js';
+import { inputRegexValidator, buildArray, isBalancedTreeText } from './helper-functions.js';
 
 const BST = getBST();
 
@@ -16,6 +17,9 @@ export default class DisplaySection {
         this.bstControlTracker = 0;
 
         this.BST_newTreeLogic = this.BST_newTreeLogic.bind(this);
+        this.BST_insertValueLogic = this.BST_insertValueLogic.bind(this);
+        this.BST_removeValueLogic = this.BST_removeValueLogic.bind(this);
+        this.BST_rebalanceTree = this.BST_rebalanceTree.bind(this);
     }
 
     // Main method that handles displaying elements on the display section
@@ -45,8 +49,10 @@ export default class DisplaySection {
 
         appendChildren(mainControlDiv, [newTree, insertValue, removeValue, isTreeBalanced, showTraversals]);
         this.lowerSection.appendChild(mainControlDiv);
+        this.BST_displayTreeBalance();
     }
 
+    // ===============================[BST TRAVERSAL METHODS]=============================== //
     getBSTTraversals() {
         const mainControlDiv = createDiv(['bst-main-control-div']);
         const levelOrderTraverse = this.BST_levelOrderTraverse();
@@ -96,7 +102,10 @@ export default class DisplaySection {
 
         return appendChildren(div, [para, values]);
     }
+    // ===============================[\BST TRAVERSAL METHODS]=============================== //
 
+
+    // ===============================[BST MANIPULATION METHODS]=============================== //
     BST_newTree() {
         const newTreeDiv = createDiv(['bst-control-div'], '');
 
@@ -111,21 +120,15 @@ export default class DisplaySection {
 
     BST_newTreeLogic() {
         const input = document.getElementById('input-new-tree');
-        if (input.value === '') return;
-        if (/[^0-9\s,]/g.test(input.value)) {
-            alert('Input contains invalid characters. Please enter only numbers separated by spaces or commas.');
-            input.focus();
-            return;
-        }
-        let array = [];
 
-        if (input.value.includes(' ')) array = input.value.split(' ');
-        if (input.value.includes(',')) array = input.value.split(',');
+        // Validates user input
+        if (inputRegexValidator(input) === false) return;
 
-        BST.rebuildTree(BST.removeDuplicatesInArr(BST.sortArray(array)));
-        this.clearUpperSection();
-        this.displayHeader('bst');
-        this.prettyPrint(BST.root);
+        const array = BST.sortAndRemoveDuplicates(buildArray(input));
+
+        this.BST_displayTreeBalance();
+        BST.rebuildTree(array);
+        this.printBST();
     }
 
     BST_insertValue() {
@@ -135,17 +138,29 @@ export default class DisplaySection {
         const input = createInput('10 20 30 40 etc.', ['bst-input'], 'input-new-value');
         const button = createButton('Add new value', ['bst-btn'], 'btn-new-value');
 
+        button.addEventListener('click', this.BST_insertValueLogic);
+
         return appendChildren(div, [para, input, button]);
     }
 
-    BST_isTreeBalanced() {
-        const div = createDiv(['bst-control-div'], '');
+    BST_insertValueLogic() {
+        const input = document.getElementById('input-new-value');
 
-        const para = createPara('Is tree balanced?', ['cli-text', 'control-label'], '');
-        const input = createInput(BST.isBalanced(BST.root), ['bst-input', 'bst-input-balanced'], 'input-new-value');
-        const button = createButton('Rebalance the tree', ['bst-btn'], 'btn-new-value');
+        // Validates user input
+        if (inputRegexValidator(input) === false) return;
 
-        return appendChildren(div, [para, input, button]);
+        const array = BST.sortAndRemoveDuplicates(buildArray(input));
+
+        // Evaluate data type and run BST method accordingly
+        if (Array.isArray(array)) {
+            while (array.length !== 0) {
+                BST.insert(array[0]);
+                array.shift();
+            }
+        } else BST.insert(array);
+
+        this.BST_displayTreeBalance();
+        this.printBST();
     }
 
     BST_removeValue() {
@@ -153,9 +168,71 @@ export default class DisplaySection {
 
         const para = createPara('Remove value', ['cli-text', 'control-label'], '');
         const input = createInput('10 20 30 40 etc.', ['bst-input'], 'remove-value');
-        const button = createButton('Remove value', ['bst-btn'], 'btn-removew-value');
+        const button = createButton('Remove value', ['bst-btn'], 'btn-remove-value');
+
+        button.addEventListener('click', this.BST_removeValueLogic);
 
         return appendChildren(div, [para, input, button]);
+    }
+
+    BST_removeValueLogic() {
+        const input = document.getElementById('remove-value');
+
+        // Validates user input
+        if (inputRegexValidator(input) === false) return;
+
+        const array = BST.sortAndRemoveDuplicates(buildArray(input));
+
+        // Evaluate data type and run BST method accordingly
+        if (Array.isArray(array)) {
+            while (array.length !== 0) {
+                BST.remove(array[0]);
+                array.shift();
+            }
+        } else BST.remove(array);
+
+        this.BST_displayTreeBalance();
+        this.printBST();
+    }
+
+    BST_isTreeBalanced() {
+        const div = createDiv(['bst-control-div'], '');
+
+        const para = createPara('Is tree balanced?', ['cli-text', 'control-label'], '');
+        const input = createInput(isBalancedTreeText(BST.isBalanced(BST.root)), ['bst-input', 'bst-input-balanced'], 'input-balanced');
+        input.disabled = true;
+        const button = createButton('Rebalance the tree', ['bst-btn'], 'btn-balanced');
+
+        button.addEventListener('click', this.BST_rebalanceTree);
+
+        return appendChildren(div, [para, input, button]);
+    }
+
+    BST_displayTreeBalance() {
+        const input = document.getElementById('input-balanced');
+        input.placeholder = isBalancedTreeText(BST.isBalanced(BST.root));
+        console.log(input.placeholder);
+
+        if (input.placeholder === 'The tree is balanced.') {
+            input.classList.add('input-balanced-color');
+            input.classList.remove('input-unbalanced-color');
+        } else {
+            input.classList.remove('input-balanced-color');
+            input.classList.add('input-unbalanced-color');
+        }
+    }
+
+    BST_rebalanceTree() {
+        BST.rebalance();
+        this.BST_displayTreeBalance();
+        this.printBST();
+    }
+
+    // ===============================[\BST MANIPULATION METHODS]=============================== //
+    printBST() {
+        this.clearUpperSection();
+        this.displayHeader('bst');
+        this.prettyPrint(BST.root);
     }
 
     // Traversal button toggle function

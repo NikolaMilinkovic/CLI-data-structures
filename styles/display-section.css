@@ -21,12 +21,15 @@
 }
 .bst-input{
     border-bottom: 1px solid var(--text-color);
-    margin-left: 2rem;
-    margin-right: 2rem;
 }
 .bst-btn{
     white-space: nowrap;
     font-family: var(--font-family);
+    min-width: 180px;
+    margin-left: 2rem;
+}
+#btn-show-traversal{
+    margin-left: 0px;
 }
 .bst-main-control-div{
     display: flex;

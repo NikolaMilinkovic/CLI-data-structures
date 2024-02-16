@@ -1,6 +1,7 @@
+/* eslint-disable no-alert */
 /* eslint-disable max-len */
 import {
-    createPara, createInput, createButton, appendChildren, createDiv, addListener,
+    createPara, createInput, createButton, appendChildren, createDiv, addListener, addThisListener,
 } from './element-builder.js';
 import { getBST } from './bst.js';
 
@@ -13,6 +14,8 @@ export default class DisplaySection {
         this.upperSection = document.getElementById(upperSection);
         this.lowerSection = document.getElementById(lowerSection);
         this.bstControlTracker = 0;
+
+        this.BST_newTreeLogic = this.BST_newTreeLogic.bind(this);
     }
 
     // Main method that handles displaying elements on the display section
@@ -101,7 +104,28 @@ export default class DisplaySection {
         const newTreeInput = createInput('10 20 30 40 etc.', ['bst-input'], 'input-new-tree');
         const newTreeBtn = createButton('Build tree', ['bst-btn'], 'btn-new-tree');
 
+        newTreeBtn.addEventListener('click', this.BST_newTreeLogic);
+
         return appendChildren(newTreeDiv, [newTreePara, newTreeInput, newTreeBtn]);
+    }
+
+    BST_newTreeLogic() {
+        const input = document.getElementById('input-new-tree');
+        if (input.value === '') return;
+        if (/[^0-9\s,]/g.test(input.value)) {
+            alert('Input contains invalid characters. Please enter only numbers separated by spaces or commas.');
+            input.focus();
+            return;
+        }
+        let array = [];
+
+        if (input.value.includes(' ')) array = input.value.split(' ');
+        if (input.value.includes(',')) array = input.value.split(',');
+
+        BST.rebuildTree(BST.removeDuplicatesInArr(BST.sortArray(array)));
+        this.clearUpperSection();
+        this.displayHeader('bst');
+        this.prettyPrint(BST.root);
     }
 
     BST_insertValue() {

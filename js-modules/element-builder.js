@@ -68,3 +68,10 @@ export function appendChildren(parent, children) {
 export function addListener(id, callback, listenFor = 'click') {
     document.getElementById(id).addEventListener(listenFor, callback);
 }
+
+// Method for adding event listener
+export function addThisListener(id, callback, listenFor = 'click') {
+    document.getElementById(id).addEventListener(listenFor, () => {
+        callback.call(this);
+    });
+}

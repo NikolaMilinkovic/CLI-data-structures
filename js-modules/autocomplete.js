@@ -1,4 +1,4 @@
-import Themes, { getThemes } from './themes.js';
+import { getThemes } from './themes.js';
 
 const themes = getThemes();
 
@@ -70,14 +70,24 @@ export default class Autocomplete {
 }
 
 
-function getThemesCmd(ThemesListArr) {
+function getCmdList(command, array) {
     const arr = [];
-    ThemesListArr.forEach((theme) => {
-        arr.push(`theme ${theme}`);
+    array.forEach((theme) => {
+        arr.push(`${command} ${theme}`);
     });
     return arr;
 }
-const themeCommands = getThemesCmd(themes.getThemesList());
+
+function getAlgorithmList() {
+    return [
+        'bst',
+        'binary-search-tree',
+        'linked-list',
+    ];
+}
+
+const themeCommands = getCmdList('theme', themes.getThemesList());
+const algorithmCommands = getCmdList('run', getAlgorithmList());
 const keywordsArr = [
     'help',
     'run',
@@ -88,6 +98,7 @@ const keywordsArr = [
     'theme',
     'banner',
     ...themeCommands,
+    ...algorithmCommands,
 ];
 keywordsArr.sort();
 const autocomplete = new Autocomplete(keywordsArr);
@@ -96,13 +107,3 @@ export function getAutocomplete() {
     return autocomplete;
 }
 
-
-// // Complete predictive text on enter key
-// input.addEventListener('keydown', (e) => {
-//     // When user presses enter and suggestion exists
-//     if (e.key === enterKey && suggestion.innerText !== '') {
-//         e.preventDefault();
-//         input.value = suggestion.innerText;
-//         console.log('tab pressed');
-//     }
-// });

@@ -211,7 +211,6 @@ export default class DisplaySection {
     BST_displayTreeBalance() {
         const input = document.getElementById('input-balanced');
         input.placeholder = isBalancedTreeText(BST.isBalanced(BST.root));
-        console.log(input.placeholder);
 
         if (input.placeholder === 'The tree is balanced.') {
             input.classList.add('input-balanced-color');

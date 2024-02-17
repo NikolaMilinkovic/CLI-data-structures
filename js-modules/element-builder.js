@@ -1,7 +1,8 @@
 // Method for div creation
-export function createDiv(classArr = [], id = '') {
+export function createDiv(classArr = [], id) {
     const div = document.createElement('div');
-    div.setAttribute('id', `${id}`);
+
+    if (id) div.setAttribute('id', `${id}`);
 
     classArr.forEach((className) => {
         div.classList.add(className);
@@ -11,8 +12,8 @@ export function createDiv(classArr = [], id = '') {
 }
 
 // Method for paragrapth creation
-export function createPara(text = '', classArr = [], id = '') {
-    const para = document.createElement('para');
+export function createPara(text = '', classArr = [], id = '', element = 'para') {
+    const para = document.createElement(element);
 
     para.setAttribute('id', `${id}`);
     para.innerHTML = text;
@@ -53,6 +54,14 @@ export function createButton(text = '', classArr = [], id = '') {
 
 
     return btn;
+}
+
+// Method for creating a link element
+export function createLink(url) {
+    const link = document.createElement('a');
+    link.href = url;
+    link.target = '_blank';
+    return link;
 }
 
 // Method for appending children to parent element

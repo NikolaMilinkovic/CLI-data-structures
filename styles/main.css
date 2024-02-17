@@ -63,6 +63,10 @@ table {
     --user-name-color: #67E480;
     --symbols-color: #ABB2BF;
     --text-color: #B4E1FD;
+    --link-color: #E96379;
+
+    --scrollbar-0: #E9FFCF;
+    --scrollbar-100: #83FF08;
 }
 * {
     font-family: var(--font-family);
@@ -150,4 +154,22 @@ input{
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
 }
-
+.git-container{
+    display: flex;
+}
+a{
+    text-decoration: none;
+    color: var(--link-color) !important; 
+}
+.link-style{
+    color: var(--link-color) !important; 
+}
+.themes-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+.print-themes-section{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}

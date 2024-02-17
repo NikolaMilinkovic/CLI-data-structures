@@ -45,7 +45,6 @@ export default class Tree {
 
     // Method for inserting new values into the Tree
     insert(value, root = this.root) {
-        console.log('insert BST logic ran');
         if (root === null) {
             return new Node(value);
         }
@@ -306,7 +305,7 @@ export const prettyPrint = (node, prefix = '', isLeft = true) => {
     if (node.right !== null) {
         prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
     }
-    console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.value}`);
+    // console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.value}`);
     if (node.left !== null) {
         prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
     }

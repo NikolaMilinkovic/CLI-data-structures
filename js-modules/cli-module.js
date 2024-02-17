@@ -3,6 +3,9 @@ import DisplaySection, { getDisplay } from './display-module.js';
 import HistoryTracker, { getHistory } from './history-tracker.js';
 import Themes, { getThemes } from './themes.js';
 import Autocomplete, { getAutocomplete } from './autocomplete.js';
+import {
+    createDiv, createPara, createLink, appendChildren,
+} from './element-builder.js';
 
 const history = getHistory();
 const themes = getThemes();
@@ -181,6 +184,15 @@ export default class CLIComponent {
         return text.join('<br>');
     }
 
+    // Returns the list of available algorithms
+    getAlgorithmList() {
+        return [
+            'bst',
+            'binary-search-tree',
+            'linked-list',
+        ];
+    }
+
     // Displays help text on the screen
     displayHelp() {
         const para = document.createElement('pre');
@@ -248,30 +260,33 @@ export default class CLIComponent {
         this.cli.appendChild(para);
     }
 
+    // Method for creating and displaying a para element
+    printLine(input, className, indentation) {
+        const para = document.createElement('pre');
+        para.innerHTML = `${indentation}${input}`;
+        para.classList.add('cli-text');
+        para.classList.add('display-margins');
+        if (className !== '') para.classList.add(className);
+        this.cli.appendChild(para);
+    }
+    // =====================================[\CLI COMMANDS]===================================== //
 
+
+    // ====================================[EVALUATE INPUT]==================================== //
     // Method for evaluating user input
     evaluateInput(userInput) {
         const input = userInput.split(' ');
         const command = input[0];
-        let parameter = input[1];
+        const parameter = input[1];
         const para = document.createElement('para');
 
         // Help
         if (command === 'help') {
             this.displayHelp();
-        } else if (command === 'run') {
-            // BST
-            if (parameter === 'binary-search-tree' || parameter === 'bst' || parameter === 'BST') {
-                display.display('bst');
-            }
-            // Linked list
-            else if (parameter === 'linked-list') {
-                display.display('linked-list');
-            }
-            // Algorithm not found
-            else {
-                this.algorithmNotFound(parameter, para);
-            }
+        }
+        // Run
+        else if (command === 'run') {
+            this.run(parameter, para);
         }
         // Algorithms
         else if (command === 'algorithms') {
@@ -283,28 +298,15 @@ export default class CLIComponent {
         }
         // Git
         else if (command === 'git') {
-            alert('pong!');
+            this.printGit('https://github.com/NikolaMilinkovic/CLI-Algorithms', 'NikolaMilinkovic/CLI-Algorithms', '         ');
         }
         // Themes
         else if (command === 'themes') {
-            const themesList = themes.getThemesList();
-            this.printLine('Available themes:', '', '   ');
-            themesList.forEach((theme) => {
-                this.printLine(theme, '', '     - ');
-            });
+            this.printThemes();
         }
         // Theme [theme name]
         else if (command === 'theme') {
-            const theme = themes.findTheme(parameter);
-            if (theme) themes.setTheme(theme);
-            else if (parameter) {
-                const fullCommand = `${command} ${parameter}`;
-                this.commandNotFound(fullCommand, para);
-            } else {
-                parameter = '';
-                const fullCommand = command + parameter;
-                this.commandNotFound(fullCommand, para);
-            }
+            this.setTheme(command, parameter, para);
         }
         // Banner
         else if (command === 'banner') {
@@ -316,16 +318,78 @@ export default class CLIComponent {
         }
     }
 
-    // Method for creating and displaying a para element
-    printLine(input, className, indentation) {
+
+    // Method for printing the themes list
+    printThemes() {
+        const themesList = themes.getThemesList();
+        const parent = createDiv(['cli-text', 'display-margins', 'themes-container'], '');
+
+        // containers for theme printing
+        const left = createDiv(['cli-text', 'display-margins', 'print-themes-section'], '');
+        const middle = createDiv(['cli-text', 'display-margins', 'print-themes-section'], '');
+        const right = createDiv(['cli-text', 'display-margins', 'print-themes-section'], '');
+
+        this.printLine('Available themes:', '', '   ');
+        let i = 0;
+
+        // prints each theme inside its corrensponding container
+        themesList.forEach((theme) => {
+            if (i < 5) this.printThemeLine(theme, '', '     - ', left);
+            if (i >= 5 && i < 10) this.printThemeLine(theme, '', '     - ', middle);
+            if (i >= 10 && i < 15) this.printThemeLine(theme, '', '     - ', right);
+            i++;
+        });
+
+        appendChildren(parent, [left, middle, right]);
+        this.cli.appendChild(parent);
+    }
+
+    printThemeLine(input, className, indentation, parent) {
         const para = document.createElement('pre');
         para.innerHTML = `${indentation}${input}`;
         para.classList.add('cli-text');
         para.classList.add('display-margins');
         if (className !== '') para.classList.add(className);
-        this.cli.appendChild(para);
+        parent.appendChild(para);
     }
-    // =====================================[\CLI COMMANDS]===================================== //
+
+    // Method for setting the theme
+    setTheme(command, parameter, para) {
+        const theme = themes.findTheme(parameter);
+        if (theme) themes.setTheme(theme);
+        else if (parameter) {
+            const fullCommand = `${command} ${parameter}`;
+            this.commandNotFound(fullCommand, para);
+        } else {
+            parameter = '';
+            const fullCommand = command + parameter;
+            this.commandNotFound(fullCommand, para);
+        }
+    }
+
+    // Handles the run command
+    run(parameter, para) {
+        const algorithmList = this.getAlgorithmList();
+        // If parameter is found inside algorithmList
+        if (algorithmList.includes(parameter)) display.display(parameter);
+        // If perameter is not found write out error
+        else this.algorithmNotFound(parameter, para);
+    }
+
+    // Method for printing link to project git repo
+    printGit(gitURL, displayText, indentation) {
+        const parent = createDiv(['git-container']);
+        this.printLine('Click on the link bellow to access this project repo', '', '      ');
+        const para = createPara(`${indentation}  [${displayText}]`, ['cli-text', 'display-margins', 'link-style'], '', 'pre');
+        const link = createLink(gitURL);
+        link.appendChild(para);
+        parent.appendChild(link);
+
+        this.cli.appendChild(parent);
+        this.printLine('Thank you for checking out this project! :)', '', '      ');
+    }
+
+    // ====================================[\EVALUATE INPUT]==================================== //
 }
 
 
@@ -400,3 +464,8 @@ cliSection.addEventListener('click', () => {
 });
 
 // =====================================[\EVENT LISTENERS]===================================== //
+
+
+export function getCLI() {
+    return CLI;
+}

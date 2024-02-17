@@ -18,8 +18,6 @@
   border-radius: 10px;
   background-color: #FFF;
   background-image: -webkit-linear-gradient(top,
-                        #E9FFCF 0%,
-                        #C7FF8D 50%,
-                        #A5FF4B 51%,
-                        #83FF08 100%);
+                        var(--scrollbar-0) 0%,
+                        var(--scrollbar-100) 100%);
 }

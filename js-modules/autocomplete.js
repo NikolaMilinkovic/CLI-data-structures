@@ -82,6 +82,7 @@ function getAlgorithmList() {
     return [
         'bst',
         'binary-search-tree',
+        'BST',
         'linked-list',
     ];
 }

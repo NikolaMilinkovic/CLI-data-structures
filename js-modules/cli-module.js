@@ -172,6 +172,7 @@ export default class CLIComponent {
     getHelpText() {
         const text = [
             'Available commands:',
+            '   ',
             ' - help',
             ' - run [algorithm name]',
             ' - algorithms',
@@ -189,6 +190,7 @@ export default class CLIComponent {
         return [
             'bst',
             'binary-search-tree',
+            'BST',
             'linked-list',
         ];
     }
@@ -279,6 +281,7 @@ export default class CLIComponent {
         const command = input[0];
         const parameter = input[1];
         const para = document.createElement('para');
+        console.log(command);
 
         // Help
         if (command === 'help') {
@@ -305,8 +308,12 @@ export default class CLIComponent {
             this.printThemes();
         }
         // Theme [theme name]
-        else if (command === 'theme') {
+        else if (command === 'theme' && (parameter !== undefined && parameter !== '')) {
             this.setTheme(command, parameter, para);
+        }
+        // Theme with no parameter
+        else if (command === 'theme') {
+            this.printActiveTheme();
         }
         // Banner
         else if (command === 'banner') {
@@ -344,6 +351,7 @@ export default class CLIComponent {
         this.cli.appendChild(parent);
     }
 
+    // Method used by printThemes method in order to create and append paragraphs
     printThemeLine(input, className, indentation, parent) {
         const para = document.createElement('pre');
         para.innerHTML = `${indentation}${input}`;
@@ -351,6 +359,14 @@ export default class CLIComponent {
         para.classList.add('display-margins');
         if (className !== '') para.classList.add(className);
         parent.appendChild(para);
+    }
+
+    // Prints currently active theme and informs user about other theme commands
+    printActiveTheme() {
+        const activeTheme = themes.getActiveTheme();
+        this.printLine(`Active theme: ${activeTheme}`, '', '      ');
+        this.printLine('To see a list of themes type: themes', '', '      ');
+        this.printLine('To set a theme type: run [theme name]', '', '      ');
     }
 
     // Method for setting the theme
@@ -453,6 +469,7 @@ function handleEnterKey() {
         history.pushInputToHistory(lastInput.value);
         history.resetHistoryTracker();
         CLI.evaluateInput(lastInput.value);
+        autocomplete.resetSpan();
         CLI.createInput();
     }
 }

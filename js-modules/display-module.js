@@ -25,7 +25,7 @@ export default class DisplaySection {
     // Main method that handles displaying elements on the display section
     display(parameter) {
         // BST
-        if (parameter === 'bst') {
+        if (parameter === 'bst' || parameter === 'binary-search-tree' || parameter === 'BST') {
             this.clearDisplaySection();
             this.displayHeader(parameter);
             this.prettyPrint(BST.root);
@@ -264,13 +264,13 @@ export default class DisplaySection {
 
     // Returns header text based on parameter
     getHeader(parameter) {
-        if (parameter === 'bst') return 'Binary Search Tree';
+        if (parameter === 'bst' || parameter === 'binary-search-tree' || parameter === 'BST') return 'Binary Search Tree';
         if (parameter === 'linked-list') return 'Linked List';
     }
 
     // Displays header on the DisplaySection
     displayHeader(parameter) {
-        if (parameter === 'bst') {
+        if (parameter === 'bst' || parameter === 'binary-search-tree' || parameter === 'BST') {
             this.printLine(this.getHeader(parameter), 'align-center', this.upperSection);
         }
         if (parameter === 'linked-list') {

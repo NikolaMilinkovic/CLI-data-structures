@@ -2,10 +2,12 @@
 import DisplaySection, { getDisplay } from './display-module.js';
 import HistoryTracker, { getHistory } from './history-tracker.js';
 import Themes, { getThemes } from './themes.js';
+import Autocomplete, { getAutocomplete } from './autocomplete.js';
 
 const history = getHistory();
 const themes = getThemes();
 const display = getDisplay();
+const autocomplete = getAutocomplete();
 
 const cliSection = document.getElementById('cli-section');
 
@@ -112,14 +114,33 @@ export default class CLIComponent {
         const para = document.createElement('pre');
         para.classList.add('user-input-el');
         const input = document.createElement('input');
+        input.autocomplete = 'off';
         const userElements = this.getUser();
+
+        const span = document.createElement('span');
+        span.classList.add('suggestion-span');
 
         userElements.forEach((element) => {
             para.appendChild(element);
         });
 
         para.appendChild(input);
+        para.appendChild(span);
         this.cli.appendChild(para);
+
+        const bodyStyle = window.getComputedStyle(document.body);
+        const contentStyle = window.getComputedStyle(document.getElementById('content'));
+        const bodyPaddingLeft = parseFloat(bodyStyle.paddingLeft);
+        const contentPaddingLeft = parseFloat(contentStyle.paddingLeft);
+        span.style.width = `${input.offsetWidth}px`;
+        span.style.height = `${input.offsetHeight}px`;
+        span.style.position = 'absolute';
+        span.style.left = `${input.offsetLeft - bodyPaddingLeft - contentPaddingLeft - 1}px`;
+        span.style.zIndex = '1';
+        span.style.color = '#868686';
+
+        para.style.position = 'relative';
+
         this.addInputEventListener();
         input.focus();
     }
@@ -127,7 +148,10 @@ export default class CLIComponent {
     addInputEventListener() {
         const lastInput = returnLastInput();
         this.inputListener = (event) => {
-            console.log(lastInput.value);
+            autocomplete.findMatch(lastInput.value, lastInput);
+            if (lastInput.value === '') {
+                autocomplete.resetSpan();
+            }
         };
 
         lastInput.addEventListener('input', this.inputListener);
@@ -229,7 +253,7 @@ export default class CLIComponent {
     evaluateInput(userInput) {
         const input = userInput.split(' ');
         const command = input[0];
-        const parameter = input[1];
+        let parameter = input[1];
         const para = document.createElement('para');
 
         // Help
@@ -273,7 +297,11 @@ export default class CLIComponent {
         else if (command === 'theme') {
             const theme = themes.findTheme(parameter);
             if (theme) themes.setTheme(theme);
-            else {
+            else if (parameter) {
+                const fullCommand = `${command} ${parameter}`;
+                this.commandNotFound(fullCommand, para);
+            } else {
+                parameter = '';
                 const fullCommand = command + parameter;
                 this.commandNotFound(fullCommand, para);
             }
@@ -312,6 +340,11 @@ function returnLastInput() {
     const lastInput = inputs[inputs.length - 1];
     return lastInput;
 }
+function returnLastSpan() {
+    const spans = cliSection.querySelectorAll('span');
+    const lastSpan = spans[spans.length - 1];
+    return lastSpan;
+}
 // Focuses the input provided as argument
 function focusLastInput(input) {
     input.focus();
@@ -329,6 +362,8 @@ document.addEventListener('keypress', (e) => {
 // Arrow up & Arrow down event listener
 document.addEventListener('keydown', (e) => {
     const lastInput = returnLastInput();
+    const span = returnLastSpan();
+    const input = returnLastInput();
     // Arrow up
     if (e.key === 'ArrowUp') {
         history.arrowUp();
@@ -338,6 +373,12 @@ document.addEventListener('keydown', (e) => {
     else if (e.key === 'ArrowDown') {
         history.arrowDown();
         history.displayHistoryInput(lastInput);
+    }
+    // Tab
+    else if (e.key === 'Tab' && span.value !== '') {
+        e.preventDefault();
+        input.value = span.innerText;
+        autocomplete.resetSpan();
     }
 });
 

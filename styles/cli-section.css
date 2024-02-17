@@ -14,3 +14,11 @@
 .non-focusable{
     user-select: none;
 }
+.suggestion-span{
+
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    font-size: var(--font-size);
+    font-family: var(--font-family);
+}

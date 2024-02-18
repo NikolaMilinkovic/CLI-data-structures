@@ -1,6 +1,6 @@
 const canvas = document.getElementById('cmatrix');
 const screenWidth = canvas.width = window.innerWidth;
-const screenHeight = canvas.height = window.innerHeight;
+const screenHeight = canvas.height = window.innerHeight + 350;
 let positions = Array(140).join(1).split('');
 const context = canvas.getContext('2d');
 const math = Math;

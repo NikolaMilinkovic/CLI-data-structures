@@ -334,11 +334,11 @@ export default class CLIComponent {
         else if (command === 'banner') {
             this.getHero();
         }
-        // Reload
+        // Reload the page
         else if (command === 'reload') {
             location.reload();
         }
-        // Banner
+        // Closes the browser window
         else if (command === 'exit') {
             window.close();
         }

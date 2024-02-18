@@ -1,4 +1,8 @@
 /* eslint-disable max-classes-per-file */
+import {
+    createPara, createInput, createButton, appendChildren, createDiv, addListener, addThisListener,
+} from './element-builder.js';
+
 class Node {
     constructor(data = null, nextNode = null) {
         this.data = data;
@@ -269,8 +273,7 @@ class LinkedList {
     // Visual print of linked list
     toString() {
         if (!this.head) {
-            console.log('There are no values in the linked list!');
-            return false;
+            return 'Tree has no values! Try inserting some?';
         }
         let current = this.head;
         let i = 0;
@@ -284,6 +287,54 @@ class LinkedList {
 
         string += '[end]';
         return string;
+    }
+
+    // Method for printing the linked list with highlighted values
+    toStringRed(array) {
+        let arr = array;
+        if (!this.head) {
+            return false;
+        }
+        if (!Array.isArray(array)) {
+            arr = [array];
+        }
+        console.log(arr);
+        let current = this.head;
+        const elementArr = [];
+
+        let classList = ['linked-list-print', 'cli-text'];
+        const parent = createDiv(['linked-list-display-div', 'cli-text', 'linked-list-print'], '');
+
+        // Handle the head element, matches the value inside array
+        // Prints head value in red color, else print normal > pushes to element Arr
+        if (arr.indexOf(current.data) !== -1) {
+            classList = ['linked-list-print', 'cli-text', 'll-red'];
+            elementArr.push(createPara('<br>[Head]=>', ['linked-list-print', 'cli-text'], '', 'para'));
+            elementArr.push(createPara(`(${current.data})`, classList, '', 'para'));
+            elementArr.push(createPara('───>', ['linked-list-print', 'cli-text'], '', 'para'));
+        } else {
+            elementArr.push(createPara(`<br>[Head]=>(${current.data})───>`, classList, '', 'para'));
+        }
+
+
+        // Traverses nodes, creates element with corresponding classes
+        while (current.nextNode !== null) {
+            current = current.nextNode;
+
+            if (arr.indexOf(current.data) !== -1) {
+                classList = ['linked-list-print', 'cli-text', 'll-red'];
+                elementArr.push(createPara(`(${current.data})`, classList, '', 'para'));
+                elementArr.push(createPara('───>', ['linked-list-print', 'cli-text'], '', 'para'));
+            } else {
+                classList = ['linked-list-print', 'cli-text'];
+                elementArr.push(createPara(`(${current.data})───>`, classList, '', 'para'));
+            }
+        }
+
+        elementArr.push(createPara('[end]', ['linked-list-print', 'cli-text'], '', 'para'));
+        appendChildren(parent, elementArr);
+
+        return parent;
     }
 
     // Visual print of linked list

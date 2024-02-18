@@ -114,6 +114,7 @@ export default class CLIComponent {
 
     // Craetes next input and appends it to the cli-section
     createInput() {
+        console.log('creating input called');
         const para = document.createElement('pre');
         para.classList.add('user-input-el');
         const input = document.createElement('input');
@@ -252,6 +253,7 @@ export default class CLIComponent {
         while (cliSection.firstChild) {
             cliSection.removeChild(cliSection.firstChild);
         }
+        console.log('running clear cli');
     }
 
     // Informs user that the command is not found
@@ -468,8 +470,8 @@ function handleEnterKey() {
         lastInput.disabled = true;
         history.pushInputToHistory(lastInput.value);
         history.resetHistoryTracker();
-        CLI.evaluateInput(lastInput.value);
         autocomplete.resetSpan();
+        CLI.evaluateInput(lastInput.value);
         CLI.createInput();
     }
 }

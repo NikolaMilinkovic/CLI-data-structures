@@ -26,6 +26,7 @@ export default class DisplaySection {
 
         this.LL_newLinkListLogic = this.LL_newLinkListLogic.bind(this);
         this.LL_removeHeadLogic = this.LL_removeHeadLogic.bind(this);
+        this.LL_removeValueIndexLogic = this.LL_removeValueIndexLogic.bind(this);
         this.LL_removeTailLogic = this.LL_removeTailLogic.bind(this);
     }
 
@@ -94,7 +95,7 @@ export default class DisplaySection {
 
         let i = 1;
         const intervalId = setInterval(() => {
-            if (i < array.length) {
+            if (i <= array.length) {
                 ll.createNewList(array.slice(0, i));
                 this.printLinkedList();
                 i++;
@@ -121,10 +122,31 @@ export default class DisplaySection {
 
 
         btnRemoveHead.addEventListener('click', this.LL_removeHeadLogic);
-        btnRemove.addEventListener('click', this.LL_RemoveLogic);
+        btnRemove.addEventListener('click', this.LL_removeValueIndexLogic);
         btnRemoveTail.addEventListener('click', this.LL_removeTailLogic);
 
         return appendChildren(div, [btnRemoveHead, appendChildren(removeControlDiv, [btnRemove, inputIndex, inputValue]), btnRemoveTail]);
+    }
+
+    LL_removeValueIndexLogic() {
+        console.log('btn Remove clicked');
+        const inputIndex = document.getElementById('input-remove-index-linked-list');
+        const inputValue = document.getElementById('input-remove-value-linked-list');
+        if (!inputIndex.value && !inputValue.value) return;
+        if (inputIndex.value && inputValue.value) {
+            console.log('obe vrednosti');
+            return;
+        }
+        if (inputIndex.value) {
+            console.log('run inputIndex');
+            this.upperSection.appendChild(ll.toStringRed(buildArray(inputValue)));
+        }
+        if (inputValue.value) {
+            console.log('run inputValue');
+            const arr = buildArray(inputValue);
+            this.removePrintAnimated(arr);
+            this.clearInput(inputValue);
+        }
     }
 
     LL_removeHeadLogic() {
@@ -340,12 +362,49 @@ export default class DisplaySection {
         }, 400);
     }
 
+    //
+    removePrintAnimated(arr) {
+        console.log('remove print animated started');
+        let count = 0;
+        const intervalId = setInterval(() => {
+            if (count % 2 !== 0) {
+                console.log('printing normal');
+                this.printLinkedList();
+            } else {
+                console.log('printin red');
+                this.printLinkedListRed(arr);
+            }
+            count++;
+            if (count >= 7) {
+                clearInterval(intervalId);
+                if (!Array.isArray(arr)) ll.removeValue(arr);
+                else {
+                    arr.forEach((value) => {
+                        ll.removeValue(value);
+                    });
+                }
+                this.clearUpperSection();
+                this.displayHeader('linked-list');
+                this.printLinkedList();
+                console.log('remove print animated finished');
+            }
+        }, 400);
+    }
 
-    // Print linked list Variation=1
+    // Print linked list normal
     printLinkedList() {
+        console.log('normal print started');
         this.clearUpperSection();
         this.displayHeader('linked-list');
         this.printLine(ll.toString(), 'linked-list-print', this.upperSection);
+    }
+
+    // Print linked list red / toStringRed
+    printLinkedListRed(arr) {
+        console.log('print red started');
+        this.clearUpperSection();
+        this.displayHeader('linked-list');
+        this.upperSection.appendChild(ll.toStringRed(arr));
     }
 
     // Print linked list Variation=2
@@ -450,6 +509,11 @@ export default class DisplaySection {
             this.prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
         }
     };
+
+    // Clear input
+    clearInput(input) {
+        input.value = '';
+    }
 }
 
 

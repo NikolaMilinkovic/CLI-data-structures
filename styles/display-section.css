@@ -50,11 +50,6 @@
     border: 2px solid var(--text-color);
     padding: 2rem;
 }
-.linked-list-print{
-    white-space: pre-wrap;
-    line-height: 1.8;
-    font-size: 20px !important;
-}
 .linked-list-control-div{
     display: grid;
     grid-template-columns: 3fr 2fr;
@@ -98,6 +93,22 @@
 .ll-remove-input{
     display: flex;
     text-align: center;
+}
+.linked-list-display-div{
+    display: flex;
+    flex-wrap: wrap;
+    white-space: nowrap;
+}
+.ll-red{
+    color: #800000 !important;
+}
+.linked-list-print{
+    display: flex;
+    align-items: flex-end !important;
+    white-space: pre-wrap;
+    flex: 0 0 auto;
+    line-height: 1.8;
+    font-size: 20px !important;
 }
 
 

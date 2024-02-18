@@ -21,6 +21,8 @@ export function buildArray(input) {
     else if (input.value.includes(',')) array = input.value.split(',').map((value) => value.trim()).filter((item) => item !== '');
     else (array = input.value);
 
+    console.log('buildArray started');
+    console.log(array);
     return array;
 }
 

@@ -98,6 +98,12 @@ const keywordsArr = [
     'themes',
     'theme',
     'banner',
+    'animation',
+    'animation start',
+    'animation stop',
+    'theme random',
+    'reload',
+    'exit',
     ...themeCommands,
     ...algorithmCommands,
 ];

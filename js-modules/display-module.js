@@ -386,7 +386,6 @@ export default class DisplaySection {
                 this.clearUpperSection();
                 this.displayHeader('linked-list');
                 this.printLinkedList();
-                console.log('remove print animated finished');
             }
         }, 400);
     }

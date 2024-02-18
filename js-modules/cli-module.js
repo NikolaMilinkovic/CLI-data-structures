@@ -6,6 +6,8 @@ import Autocomplete, { getAutocomplete } from './autocomplete.js';
 import {
     createDiv, createPara, createLink, appendChildren,
 } from './element-builder.js';
+import { stopAnimation, startAnimation } from './cmatrix.js';
+
 
 const history = getHistory();
 const themes = getThemes();
@@ -180,8 +182,11 @@ export default class CLIComponent {
             ' - clear',
             ' - git',
             ' - themes',
+            ' - animation',
             ' - theme [theme name]',
             ' - banner',
+            ' - reload',
+            ' - exit',
         ];
         return text.join('<br>');
     }
@@ -317,10 +322,28 @@ export default class CLIComponent {
         else if (command === 'theme') {
             this.printActiveTheme();
         }
+        // Animation with parameter
+        else if (command === 'animation' && (parameter !== undefined && parameter !== '')) {
+            this.animationStopStart(parameter, para);
+        }
+        // Animation without parameter
+        else if (command === 'animation') {
+            this.printAnimation();
+        }
         // Banner
         else if (command === 'banner') {
             this.getHero();
         }
+        // Reload
+        else if (command === 'reload') {
+            location.reload();
+        }
+        // Banner
+        else if (command === 'exit') {
+            window.close();
+        }
+        // Banner
+
         // Command not found
         else {
             this.commandNotFound(command, para);
@@ -351,6 +374,7 @@ export default class CLIComponent {
 
         appendChildren(parent, [left, middle, right]);
         this.cli.appendChild(parent);
+        this.printLine('For random theme type: theme random', '', '   ');
     }
 
     // Method used by printThemes method in order to create and append paragraphs
@@ -365,16 +389,20 @@ export default class CLIComponent {
 
     // Prints currently active theme and informs user about other theme commands
     printActiveTheme() {
-        const activeTheme = themes.getActiveTheme();
-        this.printLine(`Active theme: ${activeTheme}`, '', '      ');
-        this.printLine('To see a list of themes type: themes', '', '      ');
-        this.printLine('To set a theme type: run [theme name]', '', '      ');
+        const activeTheme = themes.getActiveThemeName();
+        this.printLine(`Active theme: ${activeTheme}`, '', '   ');
+        this.printLine('- For full list of themes type:  themes', '', '      ');
+        this.printLine(' ', '', ' ');
+        this.printLine('- To set a theme type:  theme [theme name]', '', '      ');
+        this.printLine(' ', '', ' ');
+        this.printLine('- For a random theme type:  theme random', '', '      ');
     }
 
     // Method for setting the theme
     setTheme(command, parameter, para) {
         const theme = themes.findTheme(parameter);
-        if (theme) themes.setTheme(theme);
+        if (parameter === 'random') themes.setRandomTheme();
+        else if (theme) themes.setTheme(theme);
         else if (parameter) {
             const fullCommand = `${command} ${parameter}`;
             this.commandNotFound(fullCommand, para);
@@ -407,6 +435,29 @@ export default class CLIComponent {
         this.printLine('Thank you for checking out this project! :)', '', '      ');
     }
 
+    // Calls for animation methods based on parameter
+    animationStopStart(parameter, para) {
+        if (parameter === 'start') this.animationStart();
+        else if (parameter === 'stop') this.animationStop();
+        else this.commandNotFound(`animation ${parameter}`, para);
+    }
+
+    // Stops background animation
+    animationStart() {
+        startAnimation();
+    }
+
+    // Starts / Continues background animation
+    animationStop() {
+        stopAnimation();
+    }
+
+    // Prints animation information
+    printAnimation() {
+        this.printLine('Using following commands you can pause / continue background animations', '', '   ');
+        this.printLine('- animation stop', '', '      ');
+        this.printLine('- animation start', '', '      ');
+    }
     // ====================================[\EVALUATE INPUT]==================================== //
 }
 

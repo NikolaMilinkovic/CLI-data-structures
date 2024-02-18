@@ -2,7 +2,7 @@
 // Evaluates user input, returns false if validation fails
 export function inputRegexValidator(input) {
     if (input.value === '') return false;
-    if (!/^-?\d+([,\s]-?\d+)*$/g.test(input.value)) {
+    if (!/^-?\d+(\s*-?\d+)*$/.test(input.value)) {
         inputAlert();
         return false;
     }
@@ -17,8 +17,8 @@ function inputAlert() {
 
 export function buildArray(input) {
     let array = [];
-    if (input.value.includes(' ')) array = input.value.split(' ');
-    else if (input.value.includes(',')) array = input.value.split(',');
+    if (input.value.includes(' ')) array = input.value.split(' ').map((value) => value.trim()).filter((item) => item !== '');
+    else if (input.value.includes(',')) array = input.value.split(',').map((value) => value.trim()).filter((item) => item !== '');
     else (array = input.value);
 
     return array;

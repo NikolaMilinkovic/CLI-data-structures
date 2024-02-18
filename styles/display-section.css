@@ -40,8 +40,70 @@
     border: 2px solid var(--text-color);
     padding: 2rem;
 }
-#input-balanced::placeholder{
+
+
+.linked-list-main-control-div{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+    border: 2px solid var(--text-color);
+    padding: 2rem;
 }
+.linked-list-print{
+    white-space: pre-wrap;
+    line-height: 1.8;
+    font-size: 20px !important;
+}
+.linked-list-control-div{
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+}
+.linked-list-remove-control-div{
+    display: flex;
+}
+#input-remove-index-linked-list{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#input-remove-value-linked-list{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+.grid-1-2-1{
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+}
+.remove-ll-btn{
+    white-space: nowrap;
+    font-family: var(--font-family);
+    min-width: 130px;
+    margin: 0px;
+}
+.remove-ll-btn-2{
+    white-space: nowrap;
+    font-family: var(--font-family);
+    min-width: 130px;
+    margin: 0px;
+}
+.btn-margin-left{
+    margin-left: 2rem;
+}
+#btn-new-linked-list{
+    margin-left: 2rem;
+}
+.ll-remove-input{
+    display: flex;
+    text-align: center;
+}
+
+
+
+
+
 .input-balanced-color::placeholder{
     color: #08FF83 !important;
 }

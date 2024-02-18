@@ -4,9 +4,12 @@ import {
     createPara, createInput, createButton, appendChildren, createDiv, addListener, addThisListener,
 } from './element-builder.js';
 import { getBST } from './bst.js';
+import { getLinkedList } from './linked-list.js';
+
 import { inputRegexValidator, buildArray, isBalancedTreeText } from './helper-functions.js';
 
 const BST = getBST();
+const ll = getLinkedList();
 
 
 export default class DisplaySection {
@@ -20,6 +23,10 @@ export default class DisplaySection {
         this.BST_insertValueLogic = this.BST_insertValueLogic.bind(this);
         this.BST_removeValueLogic = this.BST_removeValueLogic.bind(this);
         this.BST_rebalanceTree = this.BST_rebalanceTree.bind(this);
+
+        this.LL_newLinkListLogic = this.LL_newLinkListLogic.bind(this);
+        this.LL_removeHeadLogic = this.LL_removeHeadLogic.bind(this);
+        this.LL_removeTailLogic = this.LL_removeTailLogic.bind(this);
     }
 
     // Main method that handles displaying elements on the display section
@@ -35,6 +42,7 @@ export default class DisplaySection {
         else if (parameter === 'linked-list') {
             this.clearDisplaySection();
             this.displayHeader(parameter);
+            this.getLinkedListControls();
         }
     }
 
@@ -51,6 +59,87 @@ export default class DisplaySection {
         this.lowerSection.appendChild(mainControlDiv);
         this.BST_displayTreeBalance();
     }
+
+    // Methods for creating Linked List controls
+    getLinkedListControls() {
+        const mainControlDiv = createDiv(['linked-list-main-control-div']);
+        const newList = this.LL_newLinkList();
+        const insertRemove = this.LL_insertRemoveLinkList();
+        // const removeValue = this.BST_removeValue();
+        // const isTreeBalanced = this.BST_isTreeBalanced();
+        // const showTraversals = this.getBST_toggleTraversalBtn();
+
+        appendChildren(mainControlDiv, [newList, insertRemove]);
+        this.lowerSection.appendChild(mainControlDiv);
+    }
+
+
+    // ==========================[LINKED LIST MANIPULATION METHODS]=========================== //
+    LL_newLinkList() {
+        const div = createDiv(['linked-list-control-div'], '');
+
+        // const label = createPara('Create new linked list:', ['cli-text', 'control-label'], '');
+        const input = createInput('10 20 30 40 etc.', ['bst-input'], 'input-new-linked-list');
+        input.autocomplete = 'off';
+        const button = createButton('Create new linked list', ['bst-btn'], 'btn-new-linked-list');
+
+        button.addEventListener('click', this.LL_newLinkListLogic);
+
+        return appendChildren(div, [input, button]);
+    }
+
+    LL_newLinkListLogic() {
+        const input = document.getElementById('input-new-linked-list');
+        const array = buildArray(input);
+
+        let i = 1;
+        const intervalId = setInterval(() => {
+            if (i < array.length) {
+                ll.createNewList(array.slice(0, i));
+                this.printLinkedList();
+                i++;
+            } else {
+                clearInterval(intervalId);
+            }
+        }, 400);
+    }
+
+    LL_insertRemoveLinkList() {
+        const div = createDiv(['linked-list-control-div', 'grid-1-2-1'], '');
+        const btnRemoveHead = createButton('Remove head', ['remove-ll-btn'], 'btn-remove-head-linked-list');
+
+        const removeControlDiv = createDiv(['linked-list-remove-control-div'], '');
+        const btnRemove = createButton('Remove', ['remove-ll-btn-2'], 'btn-new-linked-list');
+        const inputIndex = createInput('10 20 30 40 etc.', ['bst-input', 'll-remove-input'], 'input-remove-index-linked-list');
+        inputIndex.autocomplete = 'off';
+        inputIndex.placeholder = 'index';
+        const inputValue = createInput('10 20 30 40 etc.', ['bst-input', 'll-remove-input'], 'input-remove-value-linked-list');
+        inputValue.autocomplete = 'off';
+        inputValue.placeholder = 'value';
+
+        const btnRemoveTail = createButton('Remove tail', ['remove-ll-btn', 'btn-margin-left'], 'btn-remove-tail-linked-list');
+
+
+        btnRemoveHead.addEventListener('click', this.LL_removeHeadLogic);
+        btnRemove.addEventListener('click', this.LL_RemoveLogic);
+        btnRemoveTail.addEventListener('click', this.LL_removeTailLogic);
+
+        return appendChildren(div, [btnRemoveHead, appendChildren(removeControlDiv, [btnRemove, inputIndex, inputValue]), btnRemoveTail]);
+    }
+
+    LL_removeHeadLogic() {
+        ll.removeListHead();
+        this.printLinkedList(ll.getListData());
+    }
+
+    LL_removeTailLogic() {
+        ll.pop();
+        this.printLinkedList(ll.getListData());
+    }
+
+
+    // ==========================[\LINKED LIST MANIPULATION METHODS]========================== //
+
 
     // ===============================[BST TRAVERSAL METHODS]=============================== //
     getBSTTraversals() {
@@ -228,10 +317,45 @@ export default class DisplaySection {
     }
 
     // ===============================[\BST MANIPULATION METHODS]=============================== //
+
+
+    // Method for printing BST
     printBST() {
         this.clearUpperSection();
         this.displayHeader('bst');
         this.prettyPrint(BST.root);
+    }
+
+    // Slow print method
+    slowPrint(array) {
+        let i = 1;
+        const intervalId = setInterval(() => {
+            if (i < array.length) {
+                ll.createNewList(array.slice(0, i));
+                this.printLinkedList();
+                i++;
+            } else {
+                clearInterval(intervalId);
+            }
+        }, 400);
+    }
+
+
+    // Print linked list Variation=1
+    printLinkedList() {
+        this.clearUpperSection();
+        this.displayHeader('linked-list');
+        this.printLine(ll.toString(), 'linked-list-print', this.upperSection);
+    }
+
+    // Print linked list Variation=2
+    printLinkedList2() {
+        this.clearUpperSection();
+        this.displayHeader('linked-list');
+        const arr = ll.toString2();
+        arr.forEach((string) => {
+            this.printLine(string, 'linked-list-print', this.upperSection);
+        });
     }
 
     // Traversal button toggle function

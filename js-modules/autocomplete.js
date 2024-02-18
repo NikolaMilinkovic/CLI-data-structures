@@ -104,6 +104,7 @@ const keywordsArr = [
     'theme random',
     'reload',
     'exit',
+    'fullscreen',
     ...themeCommands,
     ...algorithmCommands,
 ];

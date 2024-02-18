@@ -177,13 +177,14 @@ export default class CLIComponent {
             'Available commands:',
             '   ',
             ' - help',
-            ' - run [algorithm name]',
             ' - algorithms',
+            ' - run [algorithm name]',
+            ' - themes',
+            ' - theme [theme name]',
+            ' - animation',
+            ' - fullscreen',
             ' - clear',
             ' - git',
-            ' - themes',
-            ' - animation',
-            ' - theme [theme name]',
             ' - banner',
             ' - reload',
             ' - exit',
@@ -342,8 +343,10 @@ export default class CLIComponent {
         else if (command === 'exit') {
             window.close();
         }
-        // Banner
-
+        // Toggles browser fullscreen (f11)
+        else if (command === 'fullscreen') {
+            this.toggleFullscreen();
+        }
         // Command not found
         else {
             this.commandNotFound(command, para);
@@ -457,6 +460,16 @@ export default class CLIComponent {
         this.printLine('Using following commands you can pause / continue background animations', '', '   ');
         this.printLine('- animation stop', '', '      ');
         this.printLine('- animation start', '', '      ');
+    }
+
+    // Toggle fullscreen
+    toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+            this.printLine('To exit full screen press F11 or type:  fullscreen', '', '   ');
+        } else if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
     }
     // ====================================[\EVALUATE INPUT]==================================== //
 }

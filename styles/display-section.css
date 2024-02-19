@@ -54,15 +54,18 @@
     display: grid;
     grid-template-columns: 3fr 2fr;
 }
-.linked-list-remove-control-div{
+.linked-list-remove-control-div,
+.linked-list-insert-control-div{
     display: flex;
 }
-#input-remove-index-linked-list{
+#input-remove-index-linked-list,
+#input-insert-index-linked-list{
     display: flex;
     align-items: center;
     justify-content: center;
 }
-#input-remove-value-linked-list{
+#input-remove-value-linked-list,
+#input-insert-value-linked-list{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -87,10 +90,12 @@
 .btn-margin-left{
     margin-left: 2rem;
 }
-#btn-new-linked-list{
+#btn-new-linked-list,
+#btn-insert-linked-list{
     margin-left: 2rem;
 }
-.ll-remove-input{
+.ll-remove-input,
+.ll-insert-input{
     display: flex;
     text-align: center;
 }

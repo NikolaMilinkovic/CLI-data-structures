@@ -65,12 +65,13 @@ export default class DisplaySection {
     getLinkedListControls() {
         const mainControlDiv = createDiv(['linked-list-main-control-div']);
         const newList = this.LL_newLinkList();
-        const insertRemove = this.LL_insertRemoveLinkList();
+        const insert = this.LL_insertLinkList();
+        const remove = this.LL_removeLinkList();
         // const removeValue = this.BST_removeValue();
         // const isTreeBalanced = this.BST_isTreeBalanced();
         // const showTraversals = this.getBST_toggleTraversalBtn();
 
-        appendChildren(mainControlDiv, [newList, insertRemove]);
+        appendChildren(mainControlDiv, [newList, insert, remove]);
         this.lowerSection.appendChild(mainControlDiv);
     }
 
@@ -105,7 +106,26 @@ export default class DisplaySection {
         }, 400);
     }
 
-    LL_insertRemoveLinkList() {
+    // Insert new value __________________ index______ [btn-insert] [DROPDOWN > at start, at index, at the end]
+    LL_insertLinkList() {
+        const inputControlDiv = createDiv(['linked-list-insert-control-div'], '');
+        const btnInsert = createButton('Insert', ['insert-ll-btn-2'], 'btn-insert-linked-list');
+        const label = createPara('Insert new value:', ['cli-text', 'control-label'], '');
+
+        const inputValue = createInput('10 20 30 40 etc.', ['bst-input', 'll-insert-input'], 'input-insert-value-linked-list');
+        inputValue.autocomplete = 'off';
+        inputValue.placeholder = 'value';
+
+        const inputIndex = createInput('10 20 30 40 etc.', ['bst-input', 'll-insert-input'], 'input-insert-index-linked-list');
+        inputIndex.autocomplete = 'off';
+        inputIndex.placeholder = 'at index';
+
+        appendChildren(inputControlDiv, [label, inputValue, inputIndex, btnInsert]);
+
+        return inputControlDiv;
+    }
+
+    LL_removeLinkList() {
         const div = createDiv(['linked-list-control-div', 'grid-1-2-1'], '');
         const btnRemoveHead = createButton('Remove head', ['remove-ll-btn'], 'btn-remove-head-linked-list');
 

@@ -197,7 +197,6 @@ export default class CLIComponent {
         return [
             'bst',
             'binary-search-tree',
-            'BST',
             'linked-list',
         ];
     }
@@ -476,6 +475,9 @@ export default class CLIComponent {
 
 
 const CLI = new CLIComponent('cli-section');
+export function getCLIComponent() {
+    return CLI;
+}
 CLI.init();
 
 
@@ -484,6 +486,7 @@ CLI.init();
 function returnLastInput() {
     const inputs = cliSection.querySelectorAll('input');
     const lastInput = inputs[inputs.length - 1];
+
     return lastInput;
 }
 function returnLastSpan() {
@@ -530,12 +533,14 @@ document.addEventListener('keydown', (e) => {
 
 function handleEnterKey() {
     const lastInput = returnLastInput();
+    const lastInputValue = lastInput.value.toLowerCase();
+
     if (lastInput.value !== '') {
         lastInput.disabled = true;
-        history.pushInputToHistory(lastInput.value);
+        history.pushInputToHistory(lastInputValue);
         history.resetHistoryTracker();
         autocomplete.resetSpan();
-        CLI.evaluateInput(lastInput.value);
+        CLI.evaluateInput(lastInputValue);
         CLI.createInput();
     }
 }

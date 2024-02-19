@@ -44,6 +44,7 @@ export default class DisplaySection {
             this.clearDisplaySection();
             this.displayHeader(parameter);
             this.getLinkedListControls();
+            this.printLinkedList();
         }
     }
 
@@ -67,11 +68,11 @@ export default class DisplaySection {
         const newList = this.LL_newLinkList();
         const insert = this.LL_insertLinkList();
         const remove = this.LL_removeLinkList();
-        // const removeValue = this.BST_removeValue();
+        const find = this.LL_findLinkList();
         // const isTreeBalanced = this.BST_isTreeBalanced();
         // const showTraversals = this.getBST_toggleTraversalBtn();
 
-        appendChildren(mainControlDiv, [newList, insert, remove]);
+        appendChildren(mainControlDiv, [newList, insert, remove, find]);
         this.lowerSection.appendChild(mainControlDiv);
     }
 
@@ -103,49 +104,72 @@ export default class DisplaySection {
             } else {
                 clearInterval(intervalId);
             }
-        }, 400);
+        }, 300);
     }
 
-    // Insert new value __________________ index______ [btn-insert] [DROPDOWN > at start, at index, at the end]
     LL_insertLinkList() {
+        const div = createDiv(['linked-list-control-div', 'grid-1-2-1'], '');
         const inputControlDiv = createDiv(['linked-list-insert-control-div'], '');
+        const btnInsertHead = createButton('Insert head', ['insert-ll-btn-2', 'btn-width-160'], 'btn-insert-head-linked-list');
         const btnInsert = createButton('Insert', ['insert-ll-btn-2'], 'btn-insert-linked-list');
-        const label = createPara('Insert new value:', ['cli-text', 'control-label'], '');
 
-        const inputValue = createInput('10 20 30 40 etc.', ['bst-input', 'll-insert-input'], 'input-insert-value-linked-list');
+        const inputValue = createInput('value', ['bst-input', 'll-insert-input'], 'input-insert-value-linked-list');
         inputValue.autocomplete = 'off';
-        inputValue.placeholder = 'value';
 
-        const inputIndex = createInput('10 20 30 40 etc.', ['bst-input', 'll-insert-input'], 'input-insert-index-linked-list');
+        const inputIndex = createInput('at index', ['bst-input', 'll-insert-input'], 'input-insert-index-linked-list');
         inputIndex.autocomplete = 'off';
-        inputIndex.placeholder = 'at index';
 
-        appendChildren(inputControlDiv, [label, inputValue, inputIndex, btnInsert]);
+        const btnInsertTail = createButton('Insert tail', ['insert-ll-btn-2', 'btn-margin-left', 'btn-width-160'], 'btn-insert-tail-linked-list');
 
-        return inputControlDiv;
+        appendChildren(div, [btnInsertHead, appendChildren(inputControlDiv, [btnInsert, inputValue, inputIndex]), btnInsertTail]);
+
+        return div;
     }
 
     LL_removeLinkList() {
         const div = createDiv(['linked-list-control-div', 'grid-1-2-1'], '');
-        const btnRemoveHead = createButton('Remove head', ['remove-ll-btn'], 'btn-remove-head-linked-list');
+        const btnRemoveHead = createButton('Remove head', ['remove-ll-btn', 'btn-width-160'], 'btn-remove-head-linked-list');
 
         const removeControlDiv = createDiv(['linked-list-remove-control-div'], '');
         const btnRemove = createButton('Remove', ['remove-ll-btn-2'], 'btn-new-linked-list');
-        const inputIndex = createInput('10 20 30 40 etc.', ['bst-input', 'll-remove-input'], 'input-remove-index-linked-list');
-        inputIndex.autocomplete = 'off';
-        inputIndex.placeholder = 'index';
-        const inputValue = createInput('10 20 30 40 etc.', ['bst-input', 'll-remove-input'], 'input-remove-value-linked-list');
-        inputValue.autocomplete = 'off';
-        inputValue.placeholder = 'value';
 
-        const btnRemoveTail = createButton('Remove tail', ['remove-ll-btn', 'btn-margin-left'], 'btn-remove-tail-linked-list');
+        const inputValue = createInput('value', ['bst-input', 'll-remove-input'], 'input-remove-value-linked-list');
+        inputValue.autocomplete = 'off';
+
+        const inputIndex = createInput('at index', ['bst-input', 'll-remove-input'], 'input-remove-index-linked-list');
+        inputIndex.autocomplete = 'off';
+
+        const btnRemoveTail = createButton('Remove tail', ['remove-ll-btn', 'btn-margin-left', 'btn-width-160'], 'btn-remove-tail-linked-list');
 
 
         btnRemoveHead.addEventListener('click', this.LL_removeHeadLogic);
         btnRemove.addEventListener('click', this.LL_removeValueIndexLogic);
         btnRemoveTail.addEventListener('click', this.LL_removeTailLogic);
 
-        return appendChildren(div, [btnRemoveHead, appendChildren(removeControlDiv, [btnRemove, inputIndex, inputValue]), btnRemoveTail]);
+        return appendChildren(div, [btnRemoveHead, appendChildren(removeControlDiv, [btnRemove, inputValue, inputIndex]), btnRemoveTail]);
+    }
+
+    LL_findLinkList() {
+        const controlsDiv = createDiv(['linked-list-remove-control-div', 'grid-1-1'], '');
+        const findControlDiv = createDiv(['linked-list-remove-control-div'], '');
+        const toggleCodeDisplay = createDiv(['linked-list-remove-control-div'], '');
+
+
+        const btnFind = createButton('Find', ['remove-ll-btn', 'btn-width-160'], 'btn-find-tail-linked-list');
+
+        const inputValue = createInput('value', ['bst-input', 'll-remove-input'], 'input-remove-index-linked-list');
+        inputValue.autocomplete = 'off';
+        const inputIndex = createInput('at index', ['bst-input', 'll-remove-input'], 'input-remove-index-linked-list');
+        inputIndex.autocomplete = 'off';
+
+        const showCode = createButton('Show code', ['remove-ll-btn', 'btn-margin-left', 'margin-left-auto', 'flex-and-centers', 'flex-grow-2rem'], 'btn-remove-tail-linked-list');
+
+        const showLinkedList = createButton('Show Linked List', ['remove-ll-btn', 'btn-margin-left', 'margin-left-auto', 'btn-width-160', 'margin-left-auto', 'flex-and-centers'], 'btn-remove-tail-linked-list');
+
+        appendChildren(toggleCodeDisplay, [showCode, showLinkedList]);
+        controlsDiv.appendChild(appendChildren(findControlDiv, [btnFind, inputValue, inputIndex]));
+
+        return appendChildren(controlsDiv, [appendChildren(findControlDiv, [btnFind, inputValue, inputIndex]), toggleCodeDisplay]);
     }
 
     LL_removeValueIndexLogic() {
@@ -451,9 +475,15 @@ export default class DisplaySection {
 
     // Create and return BST Traversal toggle button
     getBST_toggleTraversalBtn() {
+        const div = createDiv(['linked-list-control-div', 'grid-1-1-1', 'gap-2rem'], '');
         const showTraversalsButton = createButton('Show traversals', ['bst-btn'], 'btn-show-traversal');
         this.addBSTToggleListener(showTraversalsButton); // Add event listener here
-        return showTraversalsButton;
+
+        const showCode = createButton('Show code', ['remove-ll-btn', 'flex-and-centers', 'flex-grow'], 'btn-remove-tail-linked-list');
+
+        const showLinkedList = createButton('Show Linked List', ['remove-ll-btn', 'flex-and-centers', 'flex-grow'], 'btn-remove-tail-linked-list');
+        appendChildren(div, [showTraversalsButton, showCode, showLinkedList]);
+        return div;
     }
 
     // Appends event listener to BST Traversal toggle button
@@ -537,6 +567,7 @@ export default class DisplaySection {
 
 
 const display = new DisplaySection('display-section', 'upper-section', 'lower-section');
+ll.createNewList(['Pikachu', 'Charizard', 'Eevee', 'MewTwo', 'Bulbasaur', 'Snorlax', 'Jigglypuf', 'Meowth']);
 
 export function getDisplay() {
     return display;

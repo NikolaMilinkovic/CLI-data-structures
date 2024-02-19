@@ -75,13 +75,23 @@
     display: grid;
     grid-template-columns: 1fr 3fr 1fr;
 }
-.remove-ll-btn{
+.grid-1-1{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.grid-1-1-1{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; 
+}
+.remove-ll-btn,
+.insert-ll-btn{
     white-space: nowrap;
     font-family: var(--font-family);
     min-width: 130px;
     margin: 0px;
 }
-.remove-ll-btn-2{
+.remove-ll-btn-2,
+.insert-ll-btn-2{
     white-space: nowrap;
     font-family: var(--font-family);
     min-width: 130px;
@@ -114,6 +124,28 @@
     flex: 0 0 auto;
     line-height: 1.8;
     font-size: 20px !important;
+}
+.btn-width-160{
+    width: 160px;
+}
+.margin-left-auto{
+    display: flex;
+    margin-left: auto;
+}
+.flex-and-centers{
+    align-items: center;
+    justify-content: center;
+}
+.flex-grow-2rem{
+    margin-left: 2rem;
+    margin-right: 2rem;
+    flex-grow: 1;
+}
+.flex-grow{
+    flex-grow: 1;
+}
+.gap-2rem{
+    gap: 2rem;
 }
 
 

@@ -107,7 +107,7 @@ export default class DisplaySection {
     // ==========================[COLLAPSE EXPAND TOGGLE LOGIC]=========================== //
     CNTRL_buttonCollapse() {
         const button = createButton('', [], 'btn-collapse');
-        const img = createImg('../img/minimize-black.png', [], 'cntrl-minimize-icon', false);
+        const img = createImg('./img/minimize-black.png', [], 'cntrl-minimize-icon', false);
         button.appendChild(img);
 
         button.addEventListener('click', this.CNTRL_buttonCollapseLogic);
@@ -169,7 +169,7 @@ export default class DisplaySection {
 
     CNTRL_buttonExpand() {
         const button = createButton('', [], 'btn-expand');
-        const img = createImg('../img/expand-black.png', [], 'cntrl-expand-icon', false);
+        const img = createImg('./img/expand-black.png', [], 'cntrl-expand-icon', false);
         button.appendChild(img);
 
         button.addEventListener('click', this.CNTRL_buttonCollapseLogic);

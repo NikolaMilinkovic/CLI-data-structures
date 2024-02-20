@@ -137,6 +137,10 @@ input{
     width: 100%;
     z-index: 2;
 }
+button{
+    white-space: normal !important;
+    word-wrap: break-word !important;
+}
 .cli-text{
     color: var(--text-color);
     display: flex;

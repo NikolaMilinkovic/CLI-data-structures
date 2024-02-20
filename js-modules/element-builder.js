@@ -42,10 +42,10 @@ export function createInput(placeholder = '', classArr = [], id = '') {
 }
 
 // Method for button creation
-export function createButton(text = '', classArr = [], id = '') {
+export function createButton(text = '', classArr = [], id = '', bst = true) {
     const btn = document.createElement('button');
     btn.setAttribute('id', `${id}`);
-    btn.classList.add('bst-btn');
+    if (bst === false) btn.classList.add('bst-btn');
     btn.innerHTML = text;
 
     classArr.forEach((className) => {
@@ -83,4 +83,15 @@ export function addThisListener(id, callback, listenFor = 'click') {
     document.getElementById(id).addEventListener(listenFor, () => {
         callback.call(this);
     });
+}
+
+export function createImg(src = '', classArr = [], id = '') {
+    const img = document.createElement('img');
+    img.src = src;
+    img.setAttribute('id', id);
+    classArr.forEach((className) => {
+        img.classList.add(className);
+    });
+
+    return img;
 }

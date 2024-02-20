@@ -37,6 +37,9 @@ export function isBalancedTreeText(balanced) {
 }
 
 
-export function placeholder() {
-
+// Method for clearing all div children
+export function clearDiv(div) {
+    while (div.firstChild) {
+        div.removeChild(div.firstChild);
+    }
 }

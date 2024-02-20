@@ -71,6 +71,9 @@ table {
 
     --cmatrix-color: rgba(103, 228, 128, 1);
     --cmatrix-background: #000000;
+
+    /* Display section */
+    --grid-template-rows: 1fr 0.6fr;
 }
 * {
     font-family: var(--font-family);
@@ -111,7 +114,7 @@ section{
 #display-section{
     padding-left: clamp(20px,1rem,5vh);
     display: grid;
-    grid-template-rows: 1fr 0.6fr;
+    grid-template-rows: var(--grid-template-rows);
     height: inherit;
 }
 #upper-section{
@@ -120,6 +123,7 @@ section{
 }
 #lower-section{
     background-color: transparent;
+    display: flex;
 }
 input{
     background-color: transparent;

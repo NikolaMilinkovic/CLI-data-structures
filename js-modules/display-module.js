@@ -1,12 +1,14 @@
 /* eslint-disable no-alert */
 /* eslint-disable max-len */
 import {
-    createPara, createInput, createButton, appendChildren, createDiv,
+    createPara, createInput, createButton, appendChildren, createDiv, createImg,
 } from './element-builder.js';
 import { getBST } from './bst.js';
 import { getLinkedList } from './linked-list.js';
 
-import { inputRegexValidator, buildArray, isBalancedTreeText } from './helper-functions.js';
+import {
+    inputRegexValidator, buildArray, isBalancedTreeText, clearDiv,
+} from './helper-functions.js';
 import { getData } from './data.js';
 
 const data = getData();
@@ -20,6 +22,8 @@ export default class DisplaySection {
         this.upperSection = document.getElementById(upperSection);
         this.lowerSection = document.getElementById(lowerSection);
         this.bstControlTracker = 0;
+
+        this.CNTRL_buttonCollapseLogic = this.CNTRL_buttonCollapseLogic.bind(this);
 
         this.BST_newTreeLogic = this.BST_newTreeLogic.bind(this);
         this.BST_insertValueLogic = this.BST_insertValueLogic.bind(this);
@@ -36,10 +40,11 @@ export default class DisplaySection {
         this.LL_showLinkedListLogic = this.LL_showLinkedListLogic.bind(this);
     }
 
+
     // Main method that handles displaying elements on the display section
     display(parameter) {
         // BST
-        if (parameter === 'bst' || parameter === 'binary-search-tree' || parameter === 'BST') {
+        if (parameter === 'bst' || parameter === 'binary-search-tree') {
             this.clearDisplaySection();
             this.displayHeader(parameter);
             this.prettyPrint(BST.root);
@@ -54,33 +59,146 @@ export default class DisplaySection {
         }
     }
 
+
+    // ==========================[\CONTROLS DISPLAY LOGIC]=========================== //
     // Methods for creating BST controls
     getBSTControls() {
-        const mainControlDiv = createDiv(['bst-main-control-div']);
+        const btnCollapse = this.CNTRL_buttonCollapse();
+        const mainControlDiv = createDiv(['bst-main-control-div', 'bst-cntrl'], 'bst-main-control-div');
         const newTree = this.BST_newTree();
         const insertValue = this.BST_insertValue();
         const removeValue = this.BST_removeValue();
         const isTreeBalanced = this.BST_isTreeBalanced();
         const showTraversals = this.getBST_toggleTraversalBtn();
 
-        appendChildren(mainControlDiv, [newTree, insertValue, removeValue, isTreeBalanced, showTraversals]);
+        appendChildren(mainControlDiv, [btnCollapse, newTree, insertValue, removeValue, isTreeBalanced, showTraversals]);
         this.lowerSection.appendChild(mainControlDiv);
         this.BST_displayTreeBalance();
     }
 
+    getBSTTraversals() {
+        const btnCollapse = this.CNTRL_buttonCollapse();
+        const mainControlDiv = createDiv(['bst-main-control-div', 'bst-traversal'], 'bst-main-control-div');
+        const levelOrderTraverse = this.BST_levelOrderTraverse();
+        const preOrderTraverse = this.BST_preOrderTraverse();
+        const inOrderTraverse = this.BST_inOrderTraverse();
+        const postOrderTraverse = this.BST_postOrderTraverse();
+        const showTraversals = this.getBST_toggleTraversalBtn();
+
+        appendChildren(mainControlDiv, [btnCollapse, levelOrderTraverse, preOrderTraverse, inOrderTraverse, postOrderTraverse, showTraversals]);
+        this.lowerSection.appendChild(mainControlDiv);
+    }
+
     // Methods for creating Linked List controls
     getLinkedListControls() {
-        const mainControlDiv = createDiv(['linked-list-main-control-div']);
+        const btnCollapse = this.CNTRL_buttonCollapse();
+        const mainControlDiv = createDiv(['linked-list-main-control-div'], 'linked-list-main-control-div');
         const newList = this.LL_newLinkList();
         const insert = this.LL_insertLinkList();
         const remove = this.LL_removeLinkList();
         const find = this.LL_findLinkList();
-        // const isTreeBalanced = this.BST_isTreeBalanced();
-        // const showTraversals = this.getBST_toggleTraversalBtn();
 
-        appendChildren(mainControlDiv, [newList, insert, remove, find]);
+        appendChildren(mainControlDiv, [btnCollapse, newList, insert, remove, find]);
         this.lowerSection.appendChild(mainControlDiv);
     }
+    // ==========================[\CONTROLS DISPLAY LOGIC]=========================== //
+
+
+    // ==========================[COLLAPSE EXPAND TOGGLE LOGIC]=========================== //
+    CNTRL_buttonCollapse() {
+        const button = createButton('', [], 'btn-collapse');
+        const img = createImg('../img/minimize-black.png', [], 'cntrl-minimize-icon', false);
+        button.appendChild(img);
+
+        button.addEventListener('click', this.CNTRL_buttonCollapseLogic);
+
+        return button;
+    }
+
+    CNTRL_buttonCollapseLogic() {
+        // Returns div id
+        const parentDivId = this.CNTRL_getFirstElId('lower-section');
+        // Cache parent div
+        const parentDiv = document.getElementById(parentDivId);
+        // Get button id from provided parent id
+        const btnId = this.CNTRL_getFirstElId(parentDivId);
+
+        // Compare values
+        const ll_divId = 'linked-list-main-control-div';
+        const BST_divId = 'bst-main-control-div';
+
+        // Case LL
+        if (parentDivId === ll_divId) {
+            // Run method based on present button id
+            if (btnId === 'btn-collapse') {
+                this.CNTRL_collapseLL(parentDiv);
+            } else {
+                this.CNTRL_expandLL(parentDiv);
+            }
+        }
+        // Case BST
+        else if (parentDivId === BST_divId) {
+            // Run method based on present button id
+            if (btnId === 'btn-collapse') {
+                this.CNTRL_collapseBST(parentDiv);
+            } else {
+                this.CNTRL_expandBST(parentDiv);
+            }
+        } else if (parentDivId === 'traversals-div') {
+            alert('we good');
+        }
+    }
+
+    CNTRL_getFirstElId(id) {
+        return document.getElementById(`${id}`).firstElementChild?.id;
+    }
+
+    CNTRL_collapseBST(div) {
+        clearDiv(div);
+        this.CNTRL_toggleDisplayGridRows('1fr 0.2fr');
+        const button = this.CNTRL_buttonExpand();
+        div.appendChild(button);
+    }
+
+    CNTRL_collapseLL(div) {
+        clearDiv(div);
+        this.CNTRL_toggleDisplayGridRows('1fr 0.2fr');
+        const button = this.CNTRL_buttonExpand();
+        div.appendChild(button);
+    }
+
+    CNTRL_buttonExpand() {
+        const button = createButton('', [], 'btn-expand');
+        const img = createImg('../img/expand-black.png', [], 'cntrl-expand-icon', false);
+        button.appendChild(img);
+
+        button.addEventListener('click', this.CNTRL_buttonCollapseLogic);
+        console.log('button expand called');
+
+        return button;
+    }
+
+    CNTRL_expandBST(parentDiv) {
+        this.CNTRL_toggleDisplayGridRows('1fr 0.6fr');
+        if (parentDiv.classList.contains('bst-cntrl')) {
+            this.clearLowerSection();
+            this.getBSTControls();
+        } else {
+            this.clearLowerSection();
+            this.getBSTTraversals();
+        }
+    }
+
+    CNTRL_expandLL() {
+        this.CNTRL_toggleDisplayGridRows('1fr 0.6fr');
+        this.clearLowerSection();
+        this.getLinkedListControls();
+    }
+
+    CNTRL_toggleDisplayGridRows(fr) {
+        document.documentElement.style.setProperty('--grid-template-rows', `${fr}`);
+    }
+    // ==========================[\COLLAPSE EXPAND TOGGLE LOGIC]=========================== //
 
 
     // ==========================[LINKED LIST MANIPULATION METHODS]=========================== //
@@ -225,17 +343,7 @@ export default class DisplaySection {
 
 
     // ===============================[BST TRAVERSAL METHODS]=============================== //
-    getBSTTraversals() {
-        const mainControlDiv = createDiv(['bst-main-control-div']);
-        const levelOrderTraverse = this.BST_levelOrderTraverse();
-        const preOrderTraverse = this.BST_preOrderTraverse();
-        const inOrderTraverse = this.BST_inOrderTraverse();
-        const postOrderTraverse = this.BST_postOrderTraverse();
-        const showTraversals = this.getBST_toggleTraversalBtn();
 
-        appendChildren(mainControlDiv, [levelOrderTraverse, preOrderTraverse, inOrderTraverse, postOrderTraverse, showTraversals]);
-        this.lowerSection.appendChild(mainControlDiv);
-    }
 
     BST_levelOrderTraverse() {
         const div = createDiv(['bst-control-div', 'bst-column-div'], '');
@@ -490,14 +598,14 @@ export default class DisplaySection {
 
     // Create and return BST Traversal toggle button
     getBST_toggleTraversalBtn() {
-        const div = createDiv(['linked-list-control-div', 'grid-1-1-1', 'gap-2rem'], '');
+        const div = createDiv(['linked-list-control-div', 'grid-1-1-1', 'gap-2rem'], 'traversals-div');
         const showTraversalsButton = createButton('Show traversals', ['bst-btn'], 'btn-show-traversal');
         this.addBSTToggleListener(showTraversalsButton);
 
         const showCode = createButton('Show code', ['remove-ll-btn', 'flex-and-centers', 'flex-grow'], 'btn-remove-tail-linked-list');
         showCode.addEventListener('click', this.BST_showCodeLogic);
 
-        const showLinkedList = createButton('Show Linked List', ['remove-ll-btn', 'flex-and-centers', 'flex-grow'], 'btn-remove-tail-linked-list');
+        const showLinkedList = createButton('Show Binary Search Tree', ['remove-ll-btn', 'flex-and-centers', 'flex-grow'], 'btn-remove-tail-linked-list');
         showLinkedList.addEventListener('click', this.BST_showBSTLogic);
 
 

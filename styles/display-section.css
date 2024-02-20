@@ -32,23 +32,17 @@
 #btn-show-traversal{
     margin-left: 0px;
 }
+.linked-list-main-control-div,
 .bst-main-control-div{
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 1rem;
     margin-top: 2rem;
     border: 2px solid var(--text-color);
     padding: 2rem;
-}
-
-
-.linked-list-main-control-div{
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-top: 2rem;
-    border: 2px solid var(--text-color);
-    padding: 2rem;
+    width: 100%;
+    margin-top: auto;
 }
 .linked-list-control-div{
     display: grid;
@@ -200,6 +194,28 @@ span.token.boolean{
 }
 span.token.class-name{
     color: #48C9B0;
+}
+span.token.string{
+    color: #CE9178;
+}
+button#btn-collapse,
+button#btn-expand{
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: -26px;
+    left: -2px;
+    margin: 0px;
+    width: 66px;
+    height: 26px;
+
+}
+#cntrl-minimize-icon,
+#cntrl-expand-icon{
+    color: var(--text-color);
+    width: 16px;
+    height: 16px;
 }
 /* \Prism.js */
 

@@ -139,7 +139,6 @@ input{
 }
 button{
     white-space: normal !important;
-    word-wrap: break-word !important;
 }
 .cli-text{
     color: var(--text-color);

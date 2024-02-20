@@ -1,13 +1,15 @@
 /* eslint-disable no-alert */
 /* eslint-disable max-len */
 import {
-    createPara, createInput, createButton, appendChildren, createDiv, addListener, addThisListener,
+    createPara, createInput, createButton, appendChildren, createDiv,
 } from './element-builder.js';
 import { getBST } from './bst.js';
 import { getLinkedList } from './linked-list.js';
 
 import { inputRegexValidator, buildArray, isBalancedTreeText } from './helper-functions.js';
+import { getData } from './data.js';
 
+const data = getData();
 const BST = getBST();
 const ll = getLinkedList();
 
@@ -23,11 +25,15 @@ export default class DisplaySection {
         this.BST_insertValueLogic = this.BST_insertValueLogic.bind(this);
         this.BST_removeValueLogic = this.BST_removeValueLogic.bind(this);
         this.BST_rebalanceTree = this.BST_rebalanceTree.bind(this);
+        this.BST_showCodeLogic = this.BST_showCodeLogic.bind(this);
+        this.BST_showBSTLogic = this.BST_showBSTLogic.bind(this);
 
         this.LL_newLinkListLogic = this.LL_newLinkListLogic.bind(this);
         this.LL_removeHeadLogic = this.LL_removeHeadLogic.bind(this);
         this.LL_removeValueIndexLogic = this.LL_removeValueIndexLogic.bind(this);
         this.LL_removeTailLogic = this.LL_removeTailLogic.bind(this);
+        this.LL_showCodeLogic = this.LL_showCodeLogic.bind(this);
+        this.LL_showLinkedListLogic = this.LL_showLinkedListLogic.bind(this);
     }
 
     // Main method that handles displaying elements on the display section
@@ -163,13 +169,26 @@ export default class DisplaySection {
         inputIndex.autocomplete = 'off';
 
         const showCode = createButton('Show code', ['remove-ll-btn', 'btn-margin-left', 'margin-left-auto', 'flex-and-centers', 'flex-grow-2rem'], 'btn-remove-tail-linked-list');
+        showCode.addEventListener('click', this.LL_showCodeLogic);
 
         const showLinkedList = createButton('Show Linked List', ['remove-ll-btn', 'btn-margin-left', 'margin-left-auto', 'btn-width-160', 'margin-left-auto', 'flex-and-centers'], 'btn-remove-tail-linked-list');
+        showLinkedList.addEventListener('click', this.LL_showLinkedListLogic);
 
         appendChildren(toggleCodeDisplay, [showCode, showLinkedList]);
         controlsDiv.appendChild(appendChildren(findControlDiv, [btnFind, inputValue, inputIndex]));
 
         return appendChildren(controlsDiv, [appendChildren(findControlDiv, [btnFind, inputValue, inputIndex]), toggleCodeDisplay]);
+    }
+
+    LL_showCodeLogic() {
+        this.clearUpperSection();
+        this.displayHeader('ll-code');
+        this.printCode(data.getData('ll-code'), 'language-javascript', this.upperSection);
+        Prism.highlightAll();
+    }
+
+    LL_showLinkedListLogic() {
+        this.printLinkedList();
     }
 
     LL_removeValueIndexLogic() {
@@ -182,11 +201,9 @@ export default class DisplaySection {
             return;
         }
         if (inputIndex.value) {
-            console.log('run inputIndex');
             this.upperSection.appendChild(ll.toStringRed(buildArray(inputValue)));
         }
         if (inputValue.value) {
-            console.log('run inputValue');
             const arr = buildArray(inputValue);
             this.removePrintAnimated(arr);
             this.clearInput(inputValue);
@@ -436,7 +453,6 @@ export default class DisplaySection {
 
     // Print linked list normal
     printLinkedList() {
-        console.log('normal print started');
         this.clearUpperSection();
         this.displayHeader('linked-list');
         this.printLine(ll.toString(), 'linked-list-print', this.upperSection);
@@ -444,7 +460,6 @@ export default class DisplaySection {
 
     // Print linked list red / toStringRed
     printLinkedListRed(arr) {
-        console.log('print red started');
         this.clearUpperSection();
         this.displayHeader('linked-list');
         this.upperSection.appendChild(ll.toStringRed(arr));
@@ -477,13 +492,28 @@ export default class DisplaySection {
     getBST_toggleTraversalBtn() {
         const div = createDiv(['linked-list-control-div', 'grid-1-1-1', 'gap-2rem'], '');
         const showTraversalsButton = createButton('Show traversals', ['bst-btn'], 'btn-show-traversal');
-        this.addBSTToggleListener(showTraversalsButton); // Add event listener here
+        this.addBSTToggleListener(showTraversalsButton);
 
         const showCode = createButton('Show code', ['remove-ll-btn', 'flex-and-centers', 'flex-grow'], 'btn-remove-tail-linked-list');
+        showCode.addEventListener('click', this.BST_showCodeLogic);
 
         const showLinkedList = createButton('Show Linked List', ['remove-ll-btn', 'flex-and-centers', 'flex-grow'], 'btn-remove-tail-linked-list');
+        showLinkedList.addEventListener('click', this.BST_showBSTLogic);
+
+
         appendChildren(div, [showTraversalsButton, showCode, showLinkedList]);
         return div;
+    }
+
+    BST_showCodeLogic() {
+        this.clearUpperSection();
+        this.displayHeader('bst-code');
+        this.printCode(data.getData('bst-code'), 'language-javascript', this.upperSection);
+        Prism.highlightAll();
+    }
+
+    BST_showBSTLogic() {
+        this.printBST();
     }
 
     // Appends event listener to BST Traversal toggle button
@@ -498,6 +528,8 @@ export default class DisplaySection {
     getHeader(parameter) {
         if (parameter === 'bst' || parameter === 'binary-search-tree' || parameter === 'BST') return 'Binary Search Tree';
         if (parameter === 'linked-list') return 'Linked List';
+        if (parameter === 'bst-code') return 'Binary Search Tree Javascript code';
+        if (parameter === 'll-code') return 'Linked List Javascript code';
     }
 
     // Displays header on the DisplaySection
@@ -507,6 +539,12 @@ export default class DisplaySection {
         }
         if (parameter === 'linked-list') {
             this.printLine(this.getHeader(parameter), 'align-center', this.upperSection);
+        }
+        if (parameter === 'bst-code') {
+            this.printLine(this.getHeader('bst-code'), 'align-center', this.upperSection);
+        }
+        if (parameter === 'll-code') {
+            this.printLine(this.getHeader('ll-code'), 'align-center', this.upperSection);
         }
     }
 
@@ -519,6 +557,20 @@ export default class DisplaySection {
         if (className !== '') para.classList.add(className);
         if (section === this.upperSection) this.upperSection.appendChild(para);
         if (section === this.lowerSection) this.upperSection.appendChild(para);
+    }
+
+    // Method for printing code using Prismjs
+    printCode(input, className, section) {
+        const code = document.createElement('code');
+        const para = document.createElement('pre');
+        code.innerHTML = input;
+        para.classList.add('cli-text');
+        para.classList.add('display-margins');
+        para.classList.add('language-css');
+        if (className !== '') code.classList.add(className);
+        para.appendChild(code);
+        if (section === this.upperSection) this.upperSection.appendChild(para);
+        if (section === this.lowerSection) this.lowerSection.appendChild(para);
     }
 
     // Method for clearing the display section

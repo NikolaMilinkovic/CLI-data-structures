@@ -91,13 +91,13 @@ body{
 #content{
     display: grid;
     grid-template-columns: 1fr 1fr;
-    height: 90vh;
+    height: 85vh;
     background-color: var(--section-background-color);
     border: 2px solid var(--border-color);
     border-radius: 10px;
     padding: clamp(20px,1rem,5vh);
-    box-sizing: border-box;
-    overflow: auto;
+    box-sizing: content-box;
+    overflow: hidden;
     font-weight: bold;
 }
 section{
@@ -106,14 +106,17 @@ section{
 #cli-section{
     border-right: 1px solid var(--border-color);
     padding-right: clamp(20px,1rem,5vh);
+    overflow: auto;
 }
 #display-section{
     padding-left: clamp(20px,1rem,5vh);
     display: grid;
     grid-template-rows: 1fr 0.6fr;
+    height: inherit;
 }
 #upper-section{
     background-color: transparent;
+    overflow: auto
 }
 #lower-section{
     background-color: transparent;

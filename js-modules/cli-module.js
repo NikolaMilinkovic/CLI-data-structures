@@ -1,14 +1,15 @@
 /* eslint-disable no-alert */
-import DisplaySection, { getDisplay } from './display-module.js';
-import HistoryTracker, { getHistory } from './history-tracker.js';
-import Themes, { getThemes } from './themes.js';
-import Autocomplete, { getAutocomplete } from './autocomplete.js';
+import { getData } from './data.js';
+import { getDisplay } from './display-module.js';
+import { getHistory } from './history-tracker.js';
+import { getThemes } from './themes.js';
+import { getAutocomplete } from './autocomplete.js';
 import {
     createDiv, createPara, createLink, appendChildren,
 } from './element-builder.js';
 import { stopAnimation, startAnimation } from './cmatrix.js';
 
-
+const data = getData();
 const history = getHistory();
 const themes = getThemes();
 const display = getDisplay();
@@ -25,15 +26,15 @@ export default class CLIComponent {
 
     // Handles innitializing the cli section
     init() {
-        this.getHero();
+        this.displayHero();
         this.createInput();
     }
 
     // =====================================[HERO METHODS]===================================== //
     // Method for displaying the hero text
-    getHero() {
-        const asciiText = this.getHeroText();
-        const subText = this.getHeroSubtext();
+    displayHero() {
+        const asciiText = data.getData('hero', 0, 0);
+        const subText = data.getData('hero', 0, 1);
 
         const heroContainer = document.createElement('pre');
         heroContainer.setAttribute('id', 'hero-container');
@@ -51,44 +52,12 @@ export default class CLIComponent {
         this.cli.appendChild(heroContainer);
     }
 
-    // Method that returns Ascii hero text
-    getHeroText() {
-        const asciiText = [
-            '   ██████╗██╗     ██╗       █████╗ ██╗      ██████╗  ██████╗ ██████╗ ██╗████████╗██╗  ██╗███╗   ███╗███████╗',
-            '  ██╔════╝██║     ██║      ██╔══██╗██║     ██╔════╝ ██╔═══██╗██╔══██╗██║╚══██╔══╝██║  ██║████╗ ████║██╔════╝',
-            '  ██║     ██║     ██║█████╗███████║██║     ██║  ███╗██║   ██║██████╔╝██║   ██║   ███████║██╔████╔██║███████╗',
-            '  ██║     ██║     ██║╚════╝██╔══██║██║     ██║   ██║██║   ██║██╔══██╗██║   ██║   ██╔══██║██║╚██╔╝██║╚════██║',
-            '  ╚██████╗███████╗██║      ██║  ██║███████╗╚██████╔╝╚██████╔╝██║  ██║██║   ██║   ██║  ██║██║ ╚═╝ ██║███████║',
-            '   ╚═════╝╚══════╝╚═╝      ╚═╝  ╚═╝╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝',
-            ' ',
-            ' ',
-        ];
-        return asciiText.join('<br>');
-    }
-
-    // Method that returns hero subtext
-    getHeroSubtext() {
-        const text = [
-            '   Welcome to CLI-Algorithms to select an algorithm type',
-            '   ',
-            '       run [algorithm name]',
-            '   ',
-            '       example:',
-            '       run binary-search-tree',
-            '   ',
-            '   To see a list of available algorithms type \'algorithms\'',
-            '   ',
-            '   Type \'help\'for help and list of options/commands.',
-        ];
-
-        return text.join('<br>');
-    }
     // =====================================[\HERO METHODS]===================================== //
 
 
     // =====================================[CLI METHODS]===================================== //
 
-    // Returns an array of
+    // Returns an array of elements for cli input display
     getUser() {
         const userType = document.createElement('span');
         userType.classList.add('cli-text');
@@ -114,9 +83,8 @@ export default class CLIComponent {
         return [userType, symbolsFirst, userName, symbolsSecond];
     }
 
-    // Craetes next input and appends it to the cli-section
+    // Creates next input and appends it to the cli-section
     createInput() {
-        console.log('creating input called');
         const para = document.createElement('pre');
         para.classList.add('user-input-el');
         const input = document.createElement('input');
@@ -151,6 +119,11 @@ export default class CLIComponent {
         input.focus();
     }
 
+    // Method for adding event listener to input, sends value upon input
+    // Handles autocomplete span value, sends it for evaluation and printing of autocomplete
+    // Handles reseting the span when user deletes the value in input
+    // This method is written in such a way so that we can remove it later on with
+    // removeInputEventListener
     addInputEventListener() {
         const lastInput = returnLastInput();
         this.inputListener = (event) => {
@@ -163,6 +136,7 @@ export default class CLIComponent {
         lastInput.addEventListener('input', this.inputListener);
     }
 
+    // Method for removing input event listener from the last input in the cli section
     removeInputEventListener() {
         const lastInput = returnLastInput();
         lastInput.removeEventListener('input', this.inputListener);
@@ -171,61 +145,16 @@ export default class CLIComponent {
 
 
     // =====================================[CLI COMMANDS]===================================== //
-    // Returns help command text
-    getHelpText() {
-        const text = [
-            'Available commands:',
-            '   ',
-            ' - help',
-            ' - algorithms',
-            ' - run [algorithm name]',
-            ' - themes',
-            ' - theme [theme name]',
-            ' - animation',
-            ' - fullscreen',
-            ' - clear',
-            ' - git',
-            ' - banner',
-            ' - reload',
-            ' - exit',
-        ];
-        return text.join('<br>');
-    }
 
-    // Returns the list of available algorithms
-    getAlgorithmList() {
-        return [
-            'bst',
-            'binary-search-tree',
-            'linked-list',
-        ];
-    }
 
     // Displays help text on the screen
     displayHelp() {
         const para = document.createElement('pre');
         para.classList.add('cli-text');
         para.classList.add('cli-mar-left-2rem');
-        para.innerHTML = this.getHelpText();
+        para.innerHTML = data.getData('help', 0);
 
         this.cli.appendChild(para);
-    }
-
-    // Returns algorithms command text
-    getAlgorithmsText() {
-        const text = [
-            'Available algorithms:',
-            '   ',
-            ' - binary-search-tree',
-            ' - linked-list',
-            '   ',
-            'To select an algorithm type run [algorithm name]',
-            '   ',
-            '   example:',
-            '   run binary-search-tree',
-            '   ',
-        ];
-        return text.join('<br>');
     }
 
     // Displays algorith list on the screen
@@ -233,7 +162,7 @@ export default class CLIComponent {
         const para = document.createElement('pre');
         para.classList.add('cli-text');
         para.classList.add('cli-mar-left-2rem');
-        para.innerHTML = this.getAlgorithmsText();
+        para.innerHTML = data.getData('algorithm-text', 0);
 
         this.cli.appendChild(para);
     }
@@ -258,7 +187,6 @@ export default class CLIComponent {
         while (cliSection.firstChild) {
             cliSection.removeChild(cliSection.firstChild);
         }
-        console.log('running clear cli');
     }
 
     // Informs user that the command is not found
@@ -288,67 +216,80 @@ export default class CLIComponent {
         const command = input[0];
         const parameter = input[1];
         const para = document.createElement('para');
-        console.log(command);
 
+        switch (command) {
         // Help
-        if (command === 'help') {
+        case 'help':
             this.displayHelp();
-        }
+            break;
+
         // Run
-        else if (command === 'run') {
+        case 'run':
             this.run(parameter, para);
-        }
+            break;
+
         // Algorithms
-        else if (command === 'algorithms') {
+        case 'algorithms':
             this.displayAlgorithms();
-        }
+            break;
+
         // Clear
-        else if (command === 'clear') {
+        case 'clear':
             this.clearCLI();
-        }
+            break;
+
         // Git
-        else if (command === 'git') {
+        case 'git':
             this.printGit('https://github.com/NikolaMilinkovic/CLI-Algorithms', 'NikolaMilinkovic/CLI-Algorithms', '         ');
-        }
+            break;
+
         // Themes
-        else if (command === 'themes') {
+        case 'themes':
             this.printThemes();
-        }
+            break;
+
         // Theme [theme name]
-        else if (command === 'theme' && (parameter !== undefined && parameter !== '')) {
-            this.setTheme(command, parameter, para);
-        }
-        // Theme with no parameter
-        else if (command === 'theme') {
-            this.printActiveTheme();
-        }
+        case 'theme':
+            if (parameter !== undefined && parameter !== '') {
+                this.setTheme(command, parameter, para);
+            } else {
+                this.printActiveTheme();
+            }
+            break;
+
         // Animation with parameter
-        else if (command === 'animation' && (parameter !== undefined && parameter !== '')) {
-            this.animationStopStart(parameter, para);
-        }
-        // Animation without parameter
-        else if (command === 'animation') {
-            this.printAnimation();
-        }
+        case 'animation':
+            if (parameter !== undefined && parameter !== '') {
+                this.animationStopStart(parameter, para);
+            } else {
+                this.printAnimation();
+            }
+            break;
+
         // Banner
-        else if (command === 'banner') {
-            this.getHero();
-        }
+        case 'banner':
+            this.displayHero();
+            break;
+
         // Reload the page
-        else if (command === 'reload') {
+        case 'reload':
             location.reload();
-        }
+            break;
+
         // Closes the browser window
-        else if (command === 'exit') {
+        case 'exit':
             window.close();
-        }
+            break;
+
         // Toggles browser fullscreen (f11)
-        else if (command === 'fullscreen') {
+        case 'fullscreen':
             this.toggleFullscreen();
-        }
+            break;
+
         // Command not found
-        else {
+        default:
             this.commandNotFound(command, para);
+            break;
         }
     }
 
@@ -417,7 +358,7 @@ export default class CLIComponent {
 
     // Handles the run command
     run(parameter, para) {
-        const algorithmList = this.getAlgorithmList();
+        const algorithmList = data.getData('algorithm-list', 0);
         // If parameter is found inside algorithmList
         if (algorithmList.includes(parameter)) display.display(parameter);
         // If perameter is not found write out error

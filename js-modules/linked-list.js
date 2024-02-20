@@ -68,13 +68,11 @@ class LinkedList {
 
     // Get the size of the linked list
     getListSize() {
-        console.log(this.size);
         return this.size;
     }
 
     // Get linked list head
     getListHead() {
-        console.log(this.head);
         return this.head;
     }
 
@@ -105,7 +103,6 @@ class LinkedList {
         for (let i = 0; i < index; i++) {
             current = current.nextNode;
             if (current === null) {
-                console.log('There is no node at the given index.');
                 return null;
             }
         }
@@ -149,7 +146,6 @@ class LinkedList {
 
     // Removes node at given index
     removeAtIndex(index) {
-        console.log(`Started removing at index ${index}`);
         const returnMessage = `Removed node at index ${index}`;
 
         // If linked list has no nodes
@@ -238,7 +234,6 @@ class LinkedList {
     contains(value) {
         let current = this.head;
         if (current.data === value) {
-            console.log(`Value ${value} has been found in the linked list`);
             return true;
         }
 
@@ -246,12 +241,10 @@ class LinkedList {
             current = current.nextNode;
 
             if (current.data === value) {
-                console.log(`Value ${value} has been found in the linked list`);
                 return true;
             }
         }
 
-        console.log(`Value ${value} has not been found inside the linked list`);
         return false;
     }
 
@@ -260,13 +253,11 @@ class LinkedList {
         let current = this.head;
         for (let i = 0; i < this.size; i++) {
             if (current.data === value) {
-                console.log(`value ${value} found on index: ${i}`);
                 return i;
             }
             current = current.nextNode;
         }
 
-        console.log('Value has not been found in the list');
         return false;
     }
 
@@ -298,7 +289,7 @@ class LinkedList {
         if (!Array.isArray(array)) {
             arr = [array];
         }
-        console.log(arr);
+
         let current = this.head;
         const elementArr = [];
 
@@ -340,7 +331,6 @@ class LinkedList {
     // Visual print of linked list
     toString2() {
         if (!this.head) {
-            console.log('There are no values in the linked list!');
             return false;
         }
         let i = 0;
@@ -371,79 +361,7 @@ class LinkedList {
     }
 }
 
-
 const ll = new LinkedList();
-ll.insertListHead(100);
-ll.insertListHead(200);
-ll.insertListHead(300);
-ll.appendNewNode(400);
-ll.getListData();
-ll.getListSize();
-ll.getListHead();
-ll.getListTail();
-ll.atIndex(0);
-ll.atIndex(1);
-ll.atIndex(2);
-ll.atIndex(3);
-ll.getListSize();
-ll.pop();
-ll.getListSize();
-
-ll.contains(500);
-ll.contains(200);
-ll.contains(100);
-ll.contains(300);
-ll.contains(600);
-ll.contains(400);
-
-ll.find(100);
-ll.find(200);
-ll.find(400);
-ll.find(500);
-
-ll.toString();
-ll.appendNewNode(500);
-ll.appendNewNode(700);
-ll.toString();
-ll.getListSize();
-ll.getListData();
-
-ll.insertListHead('test');
-ll.getListData();
-ll.toString();
-ll.insertAtIndex('head', 0);
-ll.insertAtIndex('head', 7);
-ll.insertAtIndex('random', 3);
-
-
-console.log('START TEST:');
-ll.toString();
-ll.removeAtIndex(0);
-ll.toString();
-ll.removeAtIndex(2);
-ll.toString();
-ll.removeAtIndex(6);
-ll.toString();
-ll.removeAtIndex(6);
-// ll.removeAtIndex(6);
-ll.toString();
-// ll.removeAtIndex(6);
-ll.removeAtIndex(5);
-ll.toString();
-ll.appendNewNode(100);
-ll.appendNewNode(200);
-ll.appendNewNode(100);
-ll.appendNewNode(100);
-ll.appendNewNode(300);
-ll.appendNewNode(400);
-ll.appendNewNode(100);
-ll.toString();
-ll.removeValue(100);
-ll.toString();
-ll.removeValue(300);
-ll.toString();
-ll.removeValue('test');
-ll.toString();
 
 export function getLinkedList() {
     return ll;

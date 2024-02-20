@@ -138,7 +138,6 @@ export default class Tree {
     levelOrder(callback) {
         const queue = [this.root];
         const levelOrderValues = [];
-        !callback ? console.log() : console.log('Level order traversal:');
 
         while (queue.length > 0) {
             const current = queue.shift();
@@ -305,7 +304,6 @@ export const prettyPrint = (node, prefix = '', isLeft = true) => {
     if (node.right !== null) {
         prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
     }
-    // console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.value}`);
     if (node.left !== null) {
         prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
     }

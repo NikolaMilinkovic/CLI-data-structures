@@ -149,6 +149,61 @@
 }
 
 
+/* Prism.js */
+pre[class*="language-"] {
+    background-color: transparent;
+    font-size: 16px;
+    padding: 20px;
+    text-shadow: none;
+}
+pre[class*="language-"] > * {
+    white-space: pre-wrap;
+}
+span.token{
+    text-shadow: none;
+}
+pre[class*="language-"] :not(.token),
+span.token.constant {
+    color: var(--text-color);
+    font-weight: bold;
+    text-shadow: none;
+}
+span.token.operator,
+span.token.punctuation{
+    background-color: transparent;
+}
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: #6A9955;
+    text-shadow: none;
+}
+span.token.keyword{
+    color: #4d85e4;
+}
+span.token.function{
+    color: #DCDCAA;
+}
+span.token.operator,
+span.token.number{
+    color: #FFFFFF;
+}
+span.token.punctuation{
+    color: #eeff00;
+}
+span.token.parameter{
+    color: #78DCFE;
+}
+span.token.boolean{
+    color: #B586C0;
+}
+span.token.class-name{
+    color: #48C9B0;
+}
+/* \Prism.js */
+
+
 
 
 

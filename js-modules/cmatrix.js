@@ -22,7 +22,7 @@ export default function draw() {
         return newPosition;
     });
 
-    // animationFrameId = requestAnimationFrame(draw);
+    animationFrameId = requestAnimationFrame(draw);
 }
 animationFrameId = requestAnimationFrame(draw);
 

@@ -543,6 +543,13 @@ class LinkedList {
         this.size--;
     }
 
+    // Insert new list tail
+    insertListTail(data) {
+        const tail = this.getListTail();
+        tail.nextNode = new Node(data);
+        this.size++;
+    }
+
     // Sets new node as head with null pointer
     newListHead(data) {
         this.head = new Node(data);
@@ -584,6 +591,16 @@ class LinkedList {
     // Get the size of the linked list
     getListSize() {
         return this.size;
+    }
+
+    // Sets the list size
+    setListSize(value) {
+        if (Array.isArray(value)) {
+            value.forEach((num) => {
+                this.size++;
+            });
+        }
+        if (!Array.isArray(value)) this.size = value;
     }
 
     // Get linked list head
@@ -668,14 +685,13 @@ class LinkedList {
         if (index < 0 || index > this.size) return 'Index out of bounds!';
 
         // If we are removing the list head
-        if (index === 0) {
+        if (index === '0') {
             this.removeListHead();
             return returnMessage;
         }
         // If we are removing the last element
         if (index === this.size) {
             this.pop();
-            this.size--;
             return returnMessage;
         }
 
@@ -766,9 +782,11 @@ class LinkedList {
     // Returns the index of the value if found in the linked list
     find(value) {
         let current = this.head;
-        for (let i = 0; i < this.size; i++) {
-            if (current.data === value) {
-                return i;
+        let i = 0;
+
+        for (; i <= this.size; i++) {
+            if (current.data.toString() === value) {
+                return [current.data, i];
             }
             current = current.nextNode;
         }
@@ -796,7 +814,7 @@ class LinkedList {
     }
 
     // Method for printing the linked list with highlighted values
-    toStringRed(array) {
+    toStringRedGreen(array, color = 'red') {
         let arr = array;
         if (!this.head) {
             return false;
@@ -805,74 +823,187 @@ class LinkedList {
             arr = [array];
         }
 
+        const parent = createDiv(['linked-list-display-div', 'cli-text', 'linked-list-print'], '');
+        const classListColored = ['linked-list-print', 'cli-text'];
+        const classList = ['linked-list-print', 'cli-text'];
         let current = this.head;
         const elementArr = [];
+        const trueOrFalse = (isHighlighted) => {
+            if (isHighlighted !== -1) return true;
+            return false;
+        };
 
-        let classList = ['linked-list-print', 'cli-text'];
-        const parent = createDiv(['linked-list-display-div', 'cli-text', 'linked-list-print'], '');
+        // Color selector
+        if (color === 'red') classListColored.push('ll-red');
+        if (color === 'green') classListColored.push('ll-green');
 
         // Handle the head element, matches the value inside array
         // Prints head value in red color, else print normal > pushes to element Arr
-        if (arr.indexOf(current.data) !== -1) {
-            classList = ['linked-list-print', 'cli-text', 'll-red'];
-            elementArr.push(createPara('<br>[Head]=>', ['linked-list-print', 'cli-text'], '', 'para'));
-            elementArr.push(createPara(\`(\${current.data})\`, classList, '', 'para'));
-            elementArr.push(createPara('───>', ['linked-list-print', 'cli-text'], '', 'para'));
+        // If element not found in the arr return -1 and compare to -1
+        // if element is found in the array it wil return index and will go in if statement
+        let valueFound = arr.indexOf(current.data);
+        let isHighlighted = trueOrFalse(valueFound);
+
+        if (isHighlighted) {
+            elementArr.push(createPara('<br>[Head]=>', classList, '', 'para'));
+            elementArr.push(createPara(\`(\${current.data})\`, classListColored, '', 'para'));
+            elementArr.push(createPara('───>', classList, '', 'para'));
         } else {
             elementArr.push(createPara(\`<br>[Head]=>(\${current.data})───>\`, classList, '', 'para'));
         }
 
 
-        // Traverses nodes, creates element with corresponding classes
         while (current.nextNode !== null) {
-            current = current.nextNode;
+            // Looks for value > translates to true or false
+            valueFound = arr.indexOf(current.data);
+            isHighlighted = trueOrFalse(valueFound);
 
-            if (arr.indexOf(current.data) !== -1) {
-                classList = ['linked-list-print', 'cli-text', 'll-red'];
-                elementArr.push(createPara(\`(\${current.data})\`, classList, '', 'para'));
-                elementArr.push(createPara('───>', ['linked-list-print', 'cli-text'], '', 'para'));
+            if (isHighlighted) {
+                elementArr.push(createPara(\`(\${current.data})\`, classListColored, '', 'para'));
+                elementArr.push(createPara('───>', classList, '', 'para'));
             } else {
-                classList = ['linked-list-print', 'cli-text'];
                 elementArr.push(createPara(\`(\${current.data})───>\`, classList, '', 'para'));
             }
+            current = current.nextNode;
         }
 
-        elementArr.push(createPara('[end]', ['linked-list-print', 'cli-text'], '', 'para'));
+        elementArr.push(createPara('[end]', classList, '', 'para'));
         appendChildren(parent, elementArr);
 
         return parent;
     }
 
-    // Visual print of linked list
-    toString2() {
+    // Method for printing the linked list with highlighted values
+    toStringColoredArg(index, argument = 'index', color) {
+        const current = this.head;
         if (!this.head) {
             return false;
         }
-        let i = 0;
-        let current = this.head;
-        const arr = [];
-        let string = \`<br>[\${i}]=>[Data: \${current.data}]<br> 🠋\`;
-        arr.push(string);
-
-        while (current.nextNode !== null) {
-            current = current.nextNode;
-            i++;
-            string = \`[\${i}]=>(Data: \${current.data})<br> 🠋\`;
-            arr.push(string);
+        const parent = createDiv(['linked-list-display-div', 'cli-text', 'linked-list-print'], '');
+        let classListColored = ['linked-list-print', 'cli-text', 'll-green'];
+        if (color === 'green') {
+            classListColored = ['linked-list-print', 'cli-text', 'll-green'];
         }
+        if (color === 'red') {
+            classListColored = ['linked-list-print', 'cli-text', 'll-red'];
+        }
+        const classList = ['linked-list-print', 'cli-text'];
+        let elementArr = [];
 
-        string = '[end]';
-        arr.push(string);
-        return arr;
+
+        if (argument === 'tail') {
+            elementArr = this.paintTail(elementArr, current, classList, classListColored);
+            appendChildren(parent, elementArr);
+        }
+        if (argument === 'head') {
+            elementArr = this.paintHead(elementArr, current, classList, classListColored);
+            appendChildren(parent, elementArr);
+        }
+        if (argument === 'index') {
+            elementArr = this.paintIndex(elementArr, current, index, classList, classListColored);
+            appendChildren(parent, elementArr);
+        }
+        return parent;
     }
 
-    // Create new list
+    // Traverses the linked list and paints the index node in selected color
+    // Returns an array with elements
+    paintIndex(elementArr, node, index, classList, classListColored) {
+        const printHead = () => { elementArr.push(createPara('<br>[Head]=>', ['linked-list-print', 'cli-text'], '', 'para')); };
+        const printEnd = () => {
+            elementArr.push(createPara('───>', ['linked-list-print', 'cli-text'], '', 'para'));
+            elementArr.push(createPara('[end]', ['linked-list-print', 'cli-text'], '', 'para'));
+        };
+        const printColored = () => {
+            elementArr.push(createPara(\`(\${node.data})\`, classListColored, '', 'para'));
+            elementArr.push(createPara('───>', classList, '', 'para'));
+        };
+        const printStandard = () => { elementArr.push(createPara(\`(\${node.data})───>\`, classList, '', 'para')); };
+        const printStandardNoArrow = () => { elementArr.push(createPara(\`(\${node.data})\`, classList, '', 'para')); };
+        const evaluateIndex = (isLast = false) => {
+            if (isLast === false) {
+                if (i.toString() === index) {
+                    printColored();
+                } else {
+                    printStandard();
+                }
+            } else if (i.toString() === index) {
+                printColored();
+            } else {
+                printStandardNoArrow();
+            }
+        };
+        let i = 0;
+
+        printHead();
+        while (node.nextNode !== null) {
+            evaluateIndex();
+            i++;
+
+            node = node.nextNode;
+        }
+        i++;
+        evaluateIndex(true);
+        printEnd();
+
+        return elementArr;
+    }
+
+    // Traverses the linked list and paints the last node in selected color
+    // Returns an array with elements
+    paintTail(elementArr, node, classList, classListColored) {
+        elementArr.push(createPara('<br>[Head]=>', ['linked-list-print', 'cli-text'], '', 'para'));
+        while (node.nextNode !== null) {
+            elementArr.push(createPara(\`(\${node.data})───>\`, classList, '', 'para'));
+            node = node.nextNode;
+        }
+        elementArr.push(createPara(\`(\${node.data})\`, classListColored, '', 'para'));
+        elementArr.push(createPara('───>', ['linked-list-print', 'cli-text'], '', 'para'));
+        elementArr.push(createPara('[end]', ['linked-list-print', 'cli-text'], '', 'para'));
+
+        return elementArr;
+    }
+
+    // Creates head element with selected color and rest with standard
+    // Returns an array with elements
+    paintHead(elementArr, node, classList, classListColored) {
+        elementArr.push(createPara('<br>[Head]=>', ['linked-list-print', 'cli-text'], '', 'para'));
+        elementArr.push(createPara(\`(\${node.data})\`, classListColored, '', 'para'));
+        elementArr.push(createPara('───>', ['linked-list-print', 'cli-text'], '', 'para'));
+        node = node.nextNode;
+        while (node.nextNode !== null) {
+            elementArr.push(createPara(\`(\${node.data})───>\`, classList, '', 'para'));
+            node = node.nextNode;
+        }
+        elementArr.push(createPara(\`(\${node.data})\`, classList, '', 'para'));
+        elementArr.push(createPara('───>', ['linked-list-print', 'cli-text'], '', 'para'));
+        elementArr.push(createPara('[end]', ['linked-list-print', 'cli-text'], '', 'para'));
+
+        return elementArr;
+    }
+
+    // Creates new linked list from an array elements
+    // Updates the linked list size
     createNewList(array) {
         this.newListHead(array.shift());
 
         array.forEach((value) => {
             this.appendNewNode(value);
         });
+
+        if (this.size > array.length) this.size = array.length;
+    }
+
+    // Generates random values, can specify amount of numbers and range
+    generateRandomLL(numOfValues, min, max) {
+        const values = [];
+        // Returns random value between min [included] / max [included]
+        // Pushes it to array
+        for (let i = 0; i < numOfValues; i++) {
+            values.push(Math.floor(Math.random() * (max - min + 1)) + min);
+        }
+
+        return values;
     }
 }
 
@@ -881,6 +1012,7 @@ const ll = new LinkedList();
 export function getLinkedList() {
     return ll;
 }
+
 `);
 
 data.pushBST_whatIs(`A Balanced Binary Search Tree (BST) is a data structure that stores a sorted collection of elements. It keeps the tree balanced, ensuring that the height difference between left and right subtrees of any node is at most one. This balance allows for efficient operations like search, insert, and delete, all done in logarithmic time complexity, which is faster than unbalanced binary trees.

@@ -379,7 +379,13 @@ export default class DisplaySection {
                 inputValueEl.placeholder = 'No value found';
                 inputValueEl.classList.remove('placeholder-green');
                 inputValueEl.classList.add('placeholder-red');
+
+                this.printLinkedList();
             } else {
+                this.clearUpperSection();
+                this.displayHeader('linked-list');
+                this.upperSection.appendChild(ll.toStringRedGreen(value, 'green'));
+
                 this.clearInput(inputValueEl);
                 inputValueEl.placeholder = `v: ${result[0]}   i: ${result[1]}`;
                 inputValueEl.classList.remove('placeholder-red');
@@ -864,7 +870,7 @@ export default class DisplaySection {
         if (node.right !== null) {
             this.prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
         }
-        this.printLine(`${prefix}${isLeft ? '└── ' : '┌── '}${node.value}`, '', this.upperSection);
+        this.printLine(`${prefix}${isLeft ? '└── ' : '┌── '}${node.value}`, 'll-red', this.upperSection);
         if (node.left !== null) {
             this.prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
         }

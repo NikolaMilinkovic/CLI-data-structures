@@ -254,7 +254,9 @@ export default class CLIComponent {
 
         // Clear
         case 'clear':
-            this.clearCLI();
+            console.log(parameter);
+            if (parameter === undefined || parameter === '') this.clearCLI();
+            else if (parameter === 'display') display.clearDisplaySection();
             break;
 
         // Git

@@ -180,6 +180,7 @@ data.pushHelpText([
     ' - animation _______________ Displays animation information',
     ' - fullscreen ______________ Self explanatory innit?',
     ' - clear ___________________ Clears the CLI',
+    ' - clear display____________ Clears the display section [right side]',
     ' - git _____________________ Check out my GitHub profile! <3',
     ' - banner __________________ Clears the CLI and displays banner',
     ' - reload __________________ Reloads the page / f5',

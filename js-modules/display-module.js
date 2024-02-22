@@ -45,6 +45,7 @@ export default class DisplaySection {
         this.LL_insertLogic = this.LL_insertLogic.bind(this);
         this.LL_insertTailLogic = this.LL_insertTailLogic.bind(this);
         this.LL_find = this.LL_find.bind(this);
+        this.LL_randomNumGen = this.LL_randomNumGen.bind(this);
     }
 
 
@@ -226,19 +227,26 @@ export default class DisplaySection {
     LL_newLinkListLogic() {
         const input = document.getElementById('input-new-linked-list');
         const array = buildArray(input);
+        this.LL_printAnimated(array);
+    }
 
+    // Slow prints the linked list, highlighting the tail as it prints
+    LL_printAnimated(array) {
         let i = 1;
-        let tailNode;
 
         const intervalId = setInterval(() => {
             if (i <= array.length) {
                 ll.createNewList(array.slice(0, i));
-                tailNode = ll.getListTail();
-                console.log(tailNode.data);
-                this.printLinkedListGreen(tailNode.data);
+                this.clearUpperSection();
+                this.displayHeader('linked-list');
+                const green = ll.toStringColoredArg('', 'tail', 'green');
+                this.upperSection.appendChild(green);
                 i++;
             } else {
-                this.printLinkedList();
+                const normal = ll.toString();
+                this.clearUpperSection();
+                this.displayHeader('linked-list');
+                this.printLine(normal, 'linked-list-print', this.upperSection);
                 clearInterval(intervalId);
             }
         }, 300);
@@ -272,39 +280,41 @@ export default class DisplaySection {
 
     LL_insertTailLogic() {
         const inputValue = document.getElementById('input-insert-value-linked-list');
-        const { value } = inputValue;
         if (!inputValue.value) return;
         ll.insertListTail(inputValue.value);
         this.clearInput(inputValue);
-        this.printHeadTailAnimated(value);
+        this.printHeadTailIndexAnimated('', 'tail', 'green');
     }
 
     LL_insertHeadLogic() {
         const inputValue = document.getElementById('input-insert-value-linked-list');
         const inputIndex = document.getElementById('input-insert-index-linked-list');
-        const { value } = inputValue;
         if (!inputValue.value) return;
         if (!inputIndex.value) {
             ll.insertListHead(inputValue.value);
             this.clearInput(inputValue);
         }
-        this.printHeadTailAnimated(value);
+        this.printHeadTailIndexAnimated('', 'head', 'green');
     }
 
     LL_insertLogic() {
         const inputValue = document.getElementById('input-insert-value-linked-list');
         const inputIndex = document.getElementById('input-insert-index-linked-list');
         const { value } = inputValue;
+        let index = 0;
+        let argument = 'head';
         if (!inputValue.value) return;
         if (!inputIndex.value) {
             ll.insertListHead(inputValue.value);
             this.clearInput(inputValue);
         } else if (inputIndex.value && inputValue.value) {
+            index = inputIndex.value;
+            argument = 'index';
             ll.insertAtIndex(inputValue.value, inputIndex.value);
             this.clearInput(inputValue);
             this.clearInput(inputIndex);
         }
-        this.printHeadTailAnimated(value);
+        this.printHeadTailIndexAnimated(index, argument, 'green');
     }
 
     LL_removeLinkList() {
@@ -343,10 +353,17 @@ export default class DisplaySection {
         // inputIndex.autocomplete = 'off';
 
         const generateRandom = createButton('Generate random Linked List', ['remove-ll-btn', 'btn-width-260'], 'btn-generate-random-linked-list');
+        generateRandom.addEventListener('click', this.LL_randomNumGen);
 
         controlsDiv.appendChild(appendChildren(findControlDiv, [btnFind, inputValue]));
         controlsDiv.appendChild(generateRandom);
         return controlsDiv;
+    }
+
+    LL_randomNumGen() {
+        const values = ll.generateRandomLL(15, 0, 100);
+        ll.createNewList(values);
+        this.LL_printAnimated(values);
     }
 
     LL_find() {
@@ -411,9 +428,11 @@ export default class DisplaySection {
         const inputValue = document.getElementById('input-remove-value-linked-list');
         if (!inputIndex.value && !inputValue.value) return;
         if (inputIndex.value && inputValue.value) {
-            const indexValue = ll.atIndex(inputIndex.value);
-            if (inputValue.value === indexValue.data) {
-                this.removePrintAnimated([indexValue]);
+            const nodeAtIndex = ll.atIndex(inputIndex.value);
+
+            if (inputValue.value === nodeAtIndex.data) {
+                this.printHeadTailIndexAnimated(inputIndex.value, 'index', 'red');
+                ll.removeAtIndex(inputIndex.value);
                 this.clearInput(inputIndex);
                 this.clearInput(inputValue);
                 return;
@@ -423,8 +442,8 @@ export default class DisplaySection {
             return;
         }
         if (inputIndex.value) {
-            const value = ll.atIndex(inputIndex.value);
-            this.removePrintAnimated([value]);
+            this.printHeadTailIndexAnimated(inputIndex.value, 'index', 'red');
+            ll.removeAtIndex(inputIndex.value);
             this.clearInput(inputIndex);
             return;
         }
@@ -436,13 +455,13 @@ export default class DisplaySection {
     }
 
     LL_removeHeadLogic() {
-        const head = ll.getListHead();
-        this.removePrintAnimated([head.data]);
+        this.printHeadTailIndexAnimated('', 'head', 'red');
+        ll.removeListHead();
     }
 
     LL_removeTailLogic() {
-        const tail = ll.getListTail();
-        this.removePrintAnimated([tail.data]);
+        this.printHeadTailIndexAnimated('', 'tail', 'red');
+        ll.pop();
     }
 
 
@@ -628,34 +647,24 @@ export default class DisplaySection {
         this.prettyPrint(BST.root);
     }
 
-    // Slow print method
-    slowPrint(array) {
-        let i = 1;
-        let tailNode;
-        console.log(tailNode.data);
-        const intervalId = setInterval(() => {
-            if (i < array.length) {
-                ll.createNewList(array.slice(0, i));
-                tailNode = ll.getListTail();
-                this.printLinkedListGreen(tailNode.data);
-                i++;
-            } else {
-                clearInterval(intervalId);
-            }
-        }, 400);
-        console.log('printing finished');
-        this.printLinkedList();
-    }
+    // printHeadTailIndexAnimated
+    printHeadTailIndexAnimated(index, argument, color) {
+        const green = ll.toStringColoredArg(index, argument, color);
+        const normal = ll.toString();
 
-    // printHeadTailAnimated
-    printHeadTailAnimated(value) {
         let count = 0;
+
         const intervalId = setInterval(() => {
             if (count % 2 !== 0) {
                 console.log('printing normal');
-                this.printLinkedList();
+                this.clearUpperSection();
+                this.displayHeader('linked-list');
+                this.printLine(normal, 'linked-list-print', this.upperSection);
             } else {
-                this.printLinkedListGreen(value);
+                console.log('printing green');
+                this.clearUpperSection();
+                this.displayHeader('linked-list');
+                this.upperSection.appendChild(green);
             }
             count++;
             if (count >= 7) {
@@ -690,7 +699,7 @@ export default class DisplaySection {
                 this.displayHeader('linked-list');
                 this.printLinkedList();
             }
-        }, 400);
+        }, 300);
     }
 
     // Print linked list normal
@@ -705,23 +714,6 @@ export default class DisplaySection {
         this.clearUpperSection();
         this.displayHeader('linked-list');
         this.upperSection.appendChild(ll.toStringRedGreen(arr));
-    }
-
-    // Print linked list green / toStringRedGreen
-    printLinkedListGreen(arr) {
-        this.clearUpperSection();
-        this.displayHeader('linked-list');
-        this.upperSection.appendChild(ll.toStringRedGreen(arr, 'green'));
-    }
-
-    // Print linked list Variation=2
-    printLinkedList2() {
-        this.clearUpperSection();
-        this.displayHeader('linked-list');
-        const arr = ll.toString2();
-        arr.forEach((string) => {
-            this.printLine(string, 'linked-list-print', this.upperSection);
-        });
     }
 
     // Traversal button toggle function

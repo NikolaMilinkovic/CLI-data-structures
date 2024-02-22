@@ -114,6 +114,7 @@ const keywordsArr = [
     'reload',
     'exit',
     'fullscreen',
+    'clear display',
     ...themeCommands,
     ...algorithmCommands,
 ];

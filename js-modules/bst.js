@@ -18,6 +18,27 @@ export default class Tree {
         this.postOrderValues = [];
     }
 
+    // Removes provided value from the constructor array
+    popFromArray(values) {
+        // Case of a single value
+        if (!Array.isArray(values) && this.array.includes(values)) {
+            const valueIndex = this.array.indexOf(values);
+            this.array.splice(valueIndex, 1);
+        }
+
+        // Case of an array
+        else if (Array.isArray(values)) {
+            values.forEach((value) => {
+                if (this.array.includes(value)) {
+                    const valueIndex = this.array.indexOf(value);
+                    this.array.splice(valueIndex, 1);
+                }
+            });
+        }
+
+        else console.log('value not found in the bst');
+    }
+
     // Method for rebuilding the tree on new input array
     rebuildTree(array) {
         this.array = array;
@@ -80,11 +101,13 @@ export default class Tree {
                 root.value = root.left.value;
                 root.setRight(root.left.right);
                 root.setLeft(null);
+
                 return true;
             } else if (root.right !== null && root.left === null) {
                 root.value = root.right.value;
                 root.setLeft(root.right.left);
                 root.setRight(null);
+
                 return true;
             }
 

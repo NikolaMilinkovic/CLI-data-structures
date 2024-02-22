@@ -31,6 +31,8 @@ export default class DisplaySection {
         this.BST_rebalanceTree = this.BST_rebalanceTree.bind(this);
         this.BST_showCodeLogic = this.BST_showCodeLogic.bind(this);
         this.BST_showBSTLogic = this.BST_showBSTLogic.bind(this);
+        this.BST_whatIsLogic = this.BST_whatIsLogic.bind(this);
+
 
         this.LL_newLinkListLogic = this.LL_newLinkListLogic.bind(this);
         this.LL_removeHeadLogic = this.LL_removeHeadLogic.bind(this);
@@ -38,6 +40,11 @@ export default class DisplaySection {
         this.LL_removeTailLogic = this.LL_removeTailLogic.bind(this);
         this.LL_showCodeLogic = this.LL_showCodeLogic.bind(this);
         this.LL_showLinkedListLogic = this.LL_showLinkedListLogic.bind(this);
+        this.LL_whatIsLogic = this.LL_whatIsLogic.bind(this);
+        this.LL_insertHeadLogic = this.LL_insertHeadLogic.bind(this);
+        this.LL_insertLogic = this.LL_insertLogic.bind(this);
+        this.LL_insertTailLogic = this.LL_insertTailLogic.bind(this);
+        this.LL_find = this.LL_find.bind(this);
     }
 
 
@@ -97,8 +104,9 @@ export default class DisplaySection {
         const insert = this.LL_insertLinkList();
         const remove = this.LL_removeLinkList();
         const find = this.LL_findLinkList();
+        const toggle = this.LL_showCode();
 
-        appendChildren(mainControlDiv, [btnCollapse, newList, insert, remove, find]);
+        appendChildren(mainControlDiv, [btnCollapse, newList, insert, remove, find, toggle]);
         this.lowerSection.appendChild(mainControlDiv);
     }
     // ==========================[\CONTROLS DISPLAY LOGIC]=========================== //
@@ -206,7 +214,7 @@ export default class DisplaySection {
         const div = createDiv(['linked-list-control-div'], '');
 
         // const label = createPara('Create new linked list:', ['cli-text', 'control-label'], '');
-        const input = createInput('10 20 30 40 etc.', ['bst-input'], 'input-new-linked-list');
+        const input = createInput('Insert values: 10 20 30 etc.', ['bst-input'], 'input-new-linked-list');
         input.autocomplete = 'off';
         const button = createButton('Create new linked list', ['bst-btn'], 'btn-new-linked-list');
 
@@ -220,12 +228,17 @@ export default class DisplaySection {
         const array = buildArray(input);
 
         let i = 1;
+        let tailNode;
+
         const intervalId = setInterval(() => {
             if (i <= array.length) {
                 ll.createNewList(array.slice(0, i));
-                this.printLinkedList();
+                tailNode = ll.getListTail();
+                console.log(tailNode.data);
+                this.printLinkedListGreen(tailNode.data);
                 i++;
             } else {
+                this.printLinkedList();
                 clearInterval(intervalId);
             }
         }, 300);
@@ -235,19 +248,63 @@ export default class DisplaySection {
         const div = createDiv(['linked-list-control-div', 'grid-1-2-1'], '');
         const inputControlDiv = createDiv(['linked-list-insert-control-div'], '');
         const btnInsertHead = createButton('Insert head', ['insert-ll-btn-2', 'btn-width-160'], 'btn-insert-head-linked-list');
+
+
         const btnInsert = createButton('Insert', ['insert-ll-btn-2'], 'btn-insert-linked-list');
 
         const inputValue = createInput('value', ['bst-input', 'll-insert-input'], 'input-insert-value-linked-list');
         inputValue.autocomplete = 'off';
 
-        const inputIndex = createInput('at index', ['bst-input', 'll-insert-input'], 'input-insert-index-linked-list');
+        const inputIndex = createInput('index', ['bst-input', 'll-insert-input'], 'input-insert-index-linked-list');
         inputIndex.autocomplete = 'off';
 
         const btnInsertTail = createButton('Insert tail', ['insert-ll-btn-2', 'btn-margin-left', 'btn-width-160'], 'btn-insert-tail-linked-list');
 
+
+        btnInsertHead.addEventListener('click', this.LL_insertHeadLogic);
+        btnInsert.addEventListener('click', this.LL_insertLogic);
+        btnInsertTail.addEventListener('click', this.LL_insertTailLogic);
+
         appendChildren(div, [btnInsertHead, appendChildren(inputControlDiv, [btnInsert, inputValue, inputIndex]), btnInsertTail]);
 
         return div;
+    }
+
+    LL_insertTailLogic() {
+        const inputValue = document.getElementById('input-insert-value-linked-list');
+        const { value } = inputValue;
+        if (!inputValue.value) return;
+        ll.insertListTail(inputValue.value);
+        this.clearInput(inputValue);
+        this.printHeadTailAnimated(value);
+    }
+
+    LL_insertHeadLogic() {
+        const inputValue = document.getElementById('input-insert-value-linked-list');
+        const inputIndex = document.getElementById('input-insert-index-linked-list');
+        const { value } = inputValue;
+        if (!inputValue.value) return;
+        if (!inputIndex.value) {
+            ll.insertListHead(inputValue.value);
+            this.clearInput(inputValue);
+        }
+        this.printHeadTailAnimated(value);
+    }
+
+    LL_insertLogic() {
+        const inputValue = document.getElementById('input-insert-value-linked-list');
+        const inputIndex = document.getElementById('input-insert-index-linked-list');
+        const { value } = inputValue;
+        if (!inputValue.value) return;
+        if (!inputIndex.value) {
+            ll.insertListHead(inputValue.value);
+            this.clearInput(inputValue);
+        } else if (inputIndex.value && inputValue.value) {
+            ll.insertAtIndex(inputValue.value, inputIndex.value);
+            this.clearInput(inputValue);
+            this.clearInput(inputIndex);
+        }
+        this.printHeadTailAnimated(value);
     }
 
     LL_removeLinkList() {
@@ -260,7 +317,7 @@ export default class DisplaySection {
         const inputValue = createInput('value', ['bst-input', 'll-remove-input'], 'input-remove-value-linked-list');
         inputValue.autocomplete = 'off';
 
-        const inputIndex = createInput('at index', ['bst-input', 'll-remove-input'], 'input-remove-index-linked-list');
+        const inputIndex = createInput('index', ['bst-input', 'll-remove-input'], 'input-remove-index-linked-list');
         inputIndex.autocomplete = 'off';
 
         const btnRemoveTail = createButton('Remove tail', ['remove-ll-btn', 'btn-margin-left', 'btn-width-160'], 'btn-remove-tail-linked-list');
@@ -274,28 +331,68 @@ export default class DisplaySection {
     }
 
     LL_findLinkList() {
-        const controlsDiv = createDiv(['linked-list-remove-control-div', 'grid-1-1'], '');
+        const controlsDiv = createDiv(['linked-list-remove-control-div'], 'linked-list-find-controls-div');
         const findControlDiv = createDiv(['linked-list-remove-control-div'], '');
-        const toggleCodeDisplay = createDiv(['linked-list-remove-control-div'], '');
 
+        const btnFind = createButton('Find', ['remove-ll-btn', 'btn-width-160'], 'btn-find-linked-list');
+        btnFind.addEventListener('click', this.LL_find);
 
-        const btnFind = createButton('Find', ['remove-ll-btn', 'btn-width-160'], 'btn-find-tail-linked-list');
-
-        const inputValue = createInput('value', ['bst-input', 'll-remove-input'], 'input-remove-index-linked-list');
+        const inputValue = createInput('value', ['bst-input', 'll-remove-input'], 'input-find-value-linked-list');
         inputValue.autocomplete = 'off';
-        const inputIndex = createInput('at index', ['bst-input', 'll-remove-input'], 'input-remove-index-linked-list');
-        inputIndex.autocomplete = 'off';
+        // const inputIndex = createInput('index', ['bst-input', 'll-remove-input'], 'input-find-index-linked-list');
+        // inputIndex.autocomplete = 'off';
 
-        const showCode = createButton('Show code', ['remove-ll-btn', 'btn-margin-left', 'margin-left-auto', 'flex-and-centers', 'flex-grow-2rem'], 'btn-remove-tail-linked-list');
+        const generateRandom = createButton('Generate random Linked List', ['remove-ll-btn', 'btn-width-260'], 'btn-generate-random-linked-list');
+
+        controlsDiv.appendChild(appendChildren(findControlDiv, [btnFind, inputValue]));
+        controlsDiv.appendChild(generateRandom);
+        return controlsDiv;
+    }
+
+    LL_find() {
+        const inputValueEl = document.getElementById('input-find-value-linked-list');
+        const { value } = inputValueEl;
+
+        if (!value) return;
+        if (value) {
+            const result = ll.find(value);
+            // return [current.data, i] / false;
+            if (result === false) {
+                this.clearInput(inputValueEl);
+                inputValueEl.placeholder = 'No value found';
+                inputValueEl.classList.remove('placeholder-green');
+                inputValueEl.classList.add('placeholder-red');
+            } else {
+                this.clearInput(inputValueEl);
+                inputValueEl.placeholder = `v: ${result[0]}   i: ${result[1]}`;
+                inputValueEl.classList.remove('placeholder-red');
+                inputValueEl.classList.add('placeholder-green');
+            }
+        }
+    }
+
+    LL_showCode() {
+        const controlsDiv = createDiv(['linked-list-remove-control-div'], 'show-code-parent-div');
+        const toggleShowDisplay = createDiv(['linked-list-show-commands-div'], 'show-code-child-div');
+
+        const showCode = createButton('Show code', ['remove-ll-btn', 'flex-and-centers'], 'btn-show-code-linked-list');
         showCode.addEventListener('click', this.LL_showCodeLogic);
 
-        const showLinkedList = createButton('Show Linked List', ['remove-ll-btn', 'btn-margin-left', 'margin-left-auto', 'btn-width-160', 'margin-left-auto', 'flex-and-centers'], 'btn-remove-tail-linked-list');
+        const showLinkedList = createButton('Show Linked List', ['remove-ll-btn', 'flex-and-centers'], 'btn-show-linked-list');
         showLinkedList.addEventListener('click', this.LL_showLinkedListLogic);
 
-        appendChildren(toggleCodeDisplay, [showCode, showLinkedList]);
-        controlsDiv.appendChild(appendChildren(findControlDiv, [btnFind, inputValue, inputIndex]));
+        const whatIs = createButton('What is a Linked List', ['remove-ll-btn', 'flex-and-centers'], 'btn-what-is-linked-list');
+        whatIs.addEventListener('click', this.LL_whatIsLogic);
 
-        return appendChildren(controlsDiv, [appendChildren(findControlDiv, [btnFind, inputValue, inputIndex]), toggleCodeDisplay]);
+        controlsDiv.appendChild(appendChildren(toggleShowDisplay, [whatIs, showCode, showLinkedList]));
+
+        return controlsDiv;
+    }
+
+    LL_whatIsLogic() {
+        this.clearUpperSection();
+        this.displayHeader('what-is-ll');
+        this.printCode(data.getData('what-is-ll'), '', this.upperSection);
     }
 
     LL_showCodeLogic() {
@@ -310,16 +407,26 @@ export default class DisplaySection {
     }
 
     LL_removeValueIndexLogic() {
-        console.log('btn Remove clicked');
         const inputIndex = document.getElementById('input-remove-index-linked-list');
         const inputValue = document.getElementById('input-remove-value-linked-list');
         if (!inputIndex.value && !inputValue.value) return;
         if (inputIndex.value && inputValue.value) {
-            console.log('obe vrednosti');
+            const indexValue = ll.atIndex(inputIndex.value);
+            if (inputValue.value === indexValue.data) {
+                this.removePrintAnimated([indexValue]);
+                this.clearInput(inputIndex);
+                this.clearInput(inputValue);
+                return;
+            }
+            this.removePrintAnimated([inputValue.value]);
+            this.clearInput(inputValue);
             return;
         }
         if (inputIndex.value) {
-            this.upperSection.appendChild(ll.toStringRed(buildArray(inputValue)));
+            const value = ll.atIndex(inputIndex.value);
+            this.removePrintAnimated([value]);
+            this.clearInput(inputIndex);
+            return;
         }
         if (inputValue.value) {
             const arr = buildArray(inputValue);
@@ -329,13 +436,13 @@ export default class DisplaySection {
     }
 
     LL_removeHeadLogic() {
-        ll.removeListHead();
-        this.printLinkedList(ll.getListData());
+        const head = ll.getListHead();
+        this.removePrintAnimated([head.data]);
     }
 
     LL_removeTailLogic() {
-        ll.pop();
-        this.printLinkedList(ll.getListData());
+        const tail = ll.getListTail();
+        this.removePrintAnimated([tail.data]);
     }
 
 
@@ -463,6 +570,10 @@ export default class DisplaySection {
 
         const array = BST.sortAndRemoveDuplicates(buildArray(input));
 
+        // pops out elements from bst values array
+        // prevents building the previous array upon build / rebalance click
+        BST.popFromArray(array);
+
         // Evaluate data type and run BST method accordingly
         if (Array.isArray(array)) {
             while (array.length !== 0) {
@@ -520,27 +631,50 @@ export default class DisplaySection {
     // Slow print method
     slowPrint(array) {
         let i = 1;
+        let tailNode;
+        console.log(tailNode.data);
         const intervalId = setInterval(() => {
             if (i < array.length) {
                 ll.createNewList(array.slice(0, i));
-                this.printLinkedList();
+                tailNode = ll.getListTail();
+                this.printLinkedListGreen(tailNode.data);
                 i++;
             } else {
                 clearInterval(intervalId);
             }
         }, 400);
+        console.log('printing finished');
+        this.printLinkedList();
     }
 
-    //
-    removePrintAnimated(arr) {
-        console.log('remove print animated started');
+    // printHeadTailAnimated
+    printHeadTailAnimated(value) {
         let count = 0;
         const intervalId = setInterval(() => {
             if (count % 2 !== 0) {
                 console.log('printing normal');
                 this.printLinkedList();
             } else {
-                console.log('printin red');
+                this.printLinkedListGreen(value);
+            }
+            count++;
+            if (count >= 7) {
+                clearInterval(intervalId);
+                this.clearUpperSection();
+                this.displayHeader('linked-list');
+                this.printLinkedList();
+            }
+        }, 300);
+    }
+
+    // printLinkedListRedGreen
+    removePrintAnimated(arr) {
+        let count = 0;
+        const intervalId = setInterval(() => {
+            if (count % 2 !== 0) {
+                console.log('printing normal');
+                this.printLinkedList();
+            } else {
                 this.printLinkedListRed(arr);
             }
             count++;
@@ -566,11 +700,18 @@ export default class DisplaySection {
         this.printLine(ll.toString(), 'linked-list-print', this.upperSection);
     }
 
-    // Print linked list red / toStringRed
+    // Print linked list red / toStringRedGreen
     printLinkedListRed(arr) {
         this.clearUpperSection();
         this.displayHeader('linked-list');
-        this.upperSection.appendChild(ll.toStringRed(arr));
+        this.upperSection.appendChild(ll.toStringRedGreen(arr));
+    }
+
+    // Print linked list green / toStringRedGreen
+    printLinkedListGreen(arr) {
+        this.clearUpperSection();
+        this.displayHeader('linked-list');
+        this.upperSection.appendChild(ll.toStringRedGreen(arr, 'green'));
     }
 
     // Print linked list Variation=2
@@ -598,19 +739,29 @@ export default class DisplaySection {
 
     // Create and return BST Traversal toggle button
     getBST_toggleTraversalBtn() {
-        const div = createDiv(['linked-list-control-div', 'grid-1-1-1', 'gap-2rem'], 'traversals-div');
+        const div = createDiv(['linked-list-control-div', 'grid-1-1-1-1', 'gap-2rem'], 'traversals-div');
+
+        const whatIs = createButton('What is Binary Search Tree?', ['remove-ll-btn', 'flex-and-centers', 'flex-grow'], 'btn-what-is-bst');
+        whatIs.addEventListener('click', this.BST_whatIsLogic);
+
         const showTraversalsButton = createButton('Show traversals', ['bst-btn'], 'btn-show-traversal');
         this.addBSTToggleListener(showTraversalsButton);
-
-        const showCode = createButton('Show code', ['remove-ll-btn', 'flex-and-centers', 'flex-grow'], 'btn-remove-tail-linked-list');
+        // 'flex-and-centers',
+        const showCode = createButton('Show code', ['remove-ll-btn', 'flex-grow', 'flex-and-centers'], 'btn-remove-tail-linked-list');
         showCode.addEventListener('click', this.BST_showCodeLogic);
 
         const showLinkedList = createButton('Show Binary Search Tree', ['remove-ll-btn', 'flex-and-centers', 'flex-grow'], 'btn-remove-tail-linked-list');
         showLinkedList.addEventListener('click', this.BST_showBSTLogic);
 
 
-        appendChildren(div, [showTraversalsButton, showCode, showLinkedList]);
+        appendChildren(div, [whatIs, showTraversalsButton, showCode, showLinkedList]);
         return div;
+    }
+
+    BST_whatIsLogic() {
+        this.clearUpperSection();
+        this.displayHeader('what-is-bst');
+        this.printCode(data.getData('what-is-bst'), 'language-javascript', this.upperSection);
     }
 
     BST_showCodeLogic() {
@@ -637,12 +788,14 @@ export default class DisplaySection {
         if (parameter === 'bst' || parameter === 'binary-search-tree' || parameter === 'BST') return 'Binary Search Tree';
         if (parameter === 'linked-list') return 'Linked List';
         if (parameter === 'bst-code') return 'Binary Search Tree Javascript code';
+        if (parameter === 'what-is-bst') return 'What is Binary Search Tree?';
         if (parameter === 'll-code') return 'Linked List Javascript code';
+        if (parameter === 'what-is-ll') return 'What is a Linked List?';
     }
 
     // Displays header on the DisplaySection
     displayHeader(parameter) {
-        if (parameter === 'bst' || parameter === 'binary-search-tree' || parameter === 'BST') {
+        if (parameter === 'bst' || parameter === 'binary-search-tree') {
             this.printLine(this.getHeader(parameter), 'align-center', this.upperSection);
         }
         if (parameter === 'linked-list') {
@@ -653,6 +806,12 @@ export default class DisplaySection {
         }
         if (parameter === 'll-code') {
             this.printLine(this.getHeader('ll-code'), 'align-center', this.upperSection);
+        }
+        if (parameter === 'what-is-bst') {
+            this.printLine(this.getHeader('what-is-bst'), 'align-center', this.upperSection);
+        }
+        if (parameter === 'what-is-ll') {
+            this.printLine(this.getHeader('what-is-ll'), 'align-center', this.upperSection);
         }
     }
 
@@ -732,5 +891,3 @@ ll.createNewList(['Pikachu', 'Charizard', 'Eevee', 'MewTwo', 'Bulbasaur', 'Snorl
 export function getDisplay() {
     return display;
 }
-
-

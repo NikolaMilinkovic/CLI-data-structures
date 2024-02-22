@@ -43,3 +43,49 @@ export function clearDiv(div) {
         div.removeChild(div.firstChild);
     }
 }
+
+
+export function typeWriteText(rawText = '', element, parentEl = '', speed = 20, insertBr = false, returnValue = false, firstChild = false) {
+    if (firstChild) {
+        parentEl.insertBefore(element, parentEl.firstChild);
+    } else {
+        parentEl.appendChild(element);
+    }
+    return new Promise((resolve) => {
+        const text = rawText.replace(/<br>/g, '\n').split('\n');
+
+
+        let charArr;
+        let charIndex = 0;
+        text.forEach((arr) => {
+            charArr = arr.split('');
+            charArr.forEach((char) => {
+                setTimeout(() => {
+                    if (element instanceof HTMLSpanElement) element.textContent += char;
+                    else element.innerHTML += char;
+                }, speed * charIndex++);
+            });
+
+            if (insertBr) {
+                setTimeout(() => {
+                    element.innerHTML += '<br>';
+                }, speed * charIndex++);
+            }
+        });
+
+        if (returnValue) {
+            setTimeout(() => {
+                resolve(true);
+            }, speed * charIndex++);
+        }
+    });
+}
+
+
+export function typeWriteTextArr(element_text, parentEl, speed = 20) {
+    return element_text.reduce((prevPromise, [element, text]) => prevPromise.then(() => new Promise((resolve) => {
+        typeWriteText(text, element, parentEl, speed, false, false);
+        setTimeout(resolve, speed * text.length);
+    })), Promise.resolve())
+        .then(() => true); // Resolve with true after all animations are complete
+}

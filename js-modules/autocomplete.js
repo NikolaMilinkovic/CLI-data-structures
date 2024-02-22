@@ -83,8 +83,16 @@ function getAlgorithmList() {
         'bst',
         'binary-search-tree',
         'linked-list',
+        'll',
     ];
 }
+
+export function getRandomAlgorithm() {
+    const rand = Math.floor(Math.random() * 4);
+    const algos = getAlgorithmList();
+    return algos[rand];
+}
+
 
 const themeCommands = getCmdList('theme', themes.getThemesList());
 const algorithmCommands = getCmdList('run', getAlgorithmList());
@@ -101,6 +109,8 @@ const keywordsArr = [
     'animation start',
     'animation stop',
     'theme random',
+    'random theme',
+    'random algorithm',
     'reload',
     'exit',
     'fullscreen',

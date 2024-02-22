@@ -1,9 +1,10 @@
 /* eslint-disable no-alert */
+import { typeWriteText, typeWriteTextArr } from './helper-functions.js';
 import { getData } from './data.js';
 import { getDisplay } from './display-module.js';
 import { getHistory } from './history-tracker.js';
 import { getThemes } from './themes.js';
-import { getAutocomplete } from './autocomplete.js';
+import { getAutocomplete, getRandomAlgorithm } from './autocomplete.js';
 import {
     createDiv, createPara, createLink, appendChildren,
 } from './element-builder.js';
@@ -26,31 +27,48 @@ export default class CLIComponent {
 
     // Handles innitializing the cli section
     init() {
-        this.displayHero();
-        this.createInput();
+        this.displayHero(true);
+        // this.createInput();
     }
 
     // =====================================[HERO METHODS]===================================== //
     // Method for displaying the hero text
-    displayHero() {
+    displayHero(input = false) {
+        this.clearCLI();
         const asciiText = data.getData('hero', 0, 0);
-        const subText = data.getData('hero', 0, 1);
 
         const heroContainer = document.createElement('pre');
         heroContainer.setAttribute('id', 'hero-container');
 
         const hero = document.createElement('para');
+        hero.classList.add('type-write-hero-text');
         hero.classList.add('hero-text');
         hero.innerHTML = asciiText;
         heroContainer.appendChild(hero);
 
-        const instructions = document.createElement('para');
-        instructions.classList.add('cli-text');
-        instructions.innerHTML = subText;
-        heroContainer.appendChild(instructions);
+        // Alternative to hero print
+        // typeWriteText(asciiText, hero, heroContainer, 5, true);
+
+
+        // Removes type write class from hero text and
+        // Innitializes typing subtext
+        setTimeout(() => {
+            hero.classList.remove('type-write-hero-text');
+            const subText = data.getData('hero', 0, 1);
+            const instructions = document.createElement('p');
+            instructions.classList.add('cli-text');
+            typeWriteText(subText, instructions, heroContainer, 10, true, true);
+
+            if (input) {
+                setTimeout(() => {
+                    this.createInput();
+                }, 2650);
+            }
+        }, 2500);
 
         this.cli.appendChild(heroContainer);
     }
+
 
     // =====================================[\HERO METHODS]===================================== //
 
@@ -97,7 +115,7 @@ export default class CLIComponent {
         userElements.forEach((element) => {
             para.appendChild(element);
         });
-
+        para.classList.add('type-write-text');
         para.appendChild(input);
         para.appendChild(span);
         this.cli.appendChild(para);
@@ -152,6 +170,7 @@ export default class CLIComponent {
         const para = document.createElement('pre');
         para.classList.add('cli-text');
         para.classList.add('cli-mar-left-2rem');
+        para.classList.add('line-height-1-5');
         para.innerHTML = data.getData('help', 0);
 
         this.cli.appendChild(para);
@@ -198,7 +217,7 @@ export default class CLIComponent {
     }
 
     // Method for creating and displaying a para element
-    printLine(input, className, indentation) {
+    printLine(input, className, indentation = '') {
         const para = document.createElement('pre');
         para.innerHTML = `${indentation}${input}`;
         para.classList.add('cli-text');
@@ -279,11 +298,22 @@ export default class CLIComponent {
         // Closes the browser window
         case 'exit':
             window.close();
+            this.printLine('Well, browser said no.', '', '      ');
+            this.printLine('Seems like you will have to do it,', '', '      ');
+            this.printLine('just close the tab, it\'s not that hard.', '', '      ');
             break;
 
         // Toggles browser fullscreen (f11)
         case 'fullscreen':
             this.toggleFullscreen();
+            break;
+
+            // Toggles browser fullscreen (f11)
+        case 'random':
+            if (parameter !== undefined && parameter !== '') {
+                if (parameter === 'theme') this.setTheme(parameter, command, para);
+                if (parameter === 'algorithm') this.run(getRandomAlgorithm(), para);
+            }
             break;
 
         // Command not found
@@ -317,7 +347,7 @@ export default class CLIComponent {
 
         appendChildren(parent, [left, middle, right]);
         this.cli.appendChild(parent);
-        this.printLine('For random theme type: theme random', '', '   ');
+        this.printLine('For random theme type: random theme', '', '   ');
     }
 
     // Method used by printThemes method in order to create and append paragraphs
@@ -338,7 +368,7 @@ export default class CLIComponent {
         this.printLine(' ', '', ' ');
         this.printLine('- To set a theme type:  theme [theme name]', '', '      ');
         this.printLine(' ', '', ' ');
-        this.printLine('- For a random theme type:  theme random', '', '      ');
+        this.printLine('- For a random theme type:  random theme', '', '      ');
     }
 
     // Method for setting the theme

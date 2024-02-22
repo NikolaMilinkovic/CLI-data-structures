@@ -1,4 +1,8 @@
 @import url('./main.css');
+:root{
+
+    --type-animation-char-num: 0;
+}
 .bst-control-div{
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
@@ -67,6 +71,10 @@
 }
 .grid-1-2-1{
     display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+}
+.grid-1-3-1{
+    display: grid;
     grid-template-columns: 1fr 3fr 1fr;
 }
 .grid-1-1{
@@ -76,6 +84,14 @@
 .grid-1-1-1{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr; 
+}
+.grid-1-15-1{
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr; 
+}
+.grid-1-1-1-1{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr; 
 }
 .remove-ll-btn,
 .insert-ll-btn{
@@ -108,8 +124,60 @@
     flex-wrap: wrap;
     white-space: nowrap;
 }
+#linked-list-remove-control-div{
+    grid: 1fr;
+}
+#linked-list-show-commands-div{
+    width: 100%;
+    display: grid;
+
+}
+#show-code-parent-div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#show-code-child-div{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2rem;
+}
+button#btn-show-code-linked-list,
+button#btn-show-linked-list,
+button#btn-what-is-linked-list{
+    width: 100%;
+    display: flex;
+    white-space: unset !important;
+}
+button#btn-what-is-linked-list{
+    margin-right: auto;
+}
+button#btn-show-linked-list{
+    margin-right: auto;
+}
+#linked-list-find-controls-div{
+    display: grid;
+    grid-template-columns: 3fr 2fr;  
+}
+#btn-generate-random-linked-list{
+
+    margin-left: 2rem;
+}
+#btn-find-linked-list{
+    min-width: 160px;
+}
+.placeholder-red::placeholder{
+    color: #c40202;
+}
+.placeholder-green::placeholder{
+    color: #08FF83;
+}
 .ll-red{
-    color: #800000 !important;
+    color: #c40202 !important;
+}
+.ll-green{
+    color: #08FF83 !important;
 }
 .linked-list-print{
     display: flex;
@@ -122,24 +190,54 @@
 .btn-width-160{
     width: 160px;
 }
+.btn-width-260{
+    width: 260px;
+}
 .margin-left-auto{
     display: flex;
     margin-left: auto;
 }
+.margin-left-2rem{
+    margin-left: 2rem;
+}
+.margin-right-2rem{
+    margin-right: 2rem;
+}
+.margin-right-auto{
+    display: flex;
+    margin-right: auto;
+}
 .flex-and-centers{
+    display: flex;
     align-items: center;
     justify-content: center;
 }
 .flex-grow-2rem{
+    display: flex;
     margin-left: 2rem;
     margin-right: 2rem;
     flex-grow: 1;
 }
 .flex-grow{
+    display: flex;
     flex-grow: 1;
 }
 .gap-2rem{
     gap: 2rem;
+}
+.type-write-hero-text{
+    border-right: 3px solid;
+    width: 100%;
+    overflow: hidden;
+    animation: 
+        typing-hero 1s steps(18),
+        cursor-hero .6s step-end infinite alternate;
+}
+@keyframes cursor-hero {
+    50%{ border-color: transparent }
+}
+@keyframes typing-hero {
+    from {width: 0}
 }
 
 

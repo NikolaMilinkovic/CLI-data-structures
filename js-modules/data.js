@@ -6,6 +6,8 @@ export default class Data {
         this.algorithmText = [];
         this.BST_code = '';
         this.LL_code = '';
+        this.BST_whatIs = '';
+        this.LL_whatIs = '';
     }
 
     // ===============================[DATA RETRIEVAL METHODS]=============================== //
@@ -38,6 +40,14 @@ export default class Data {
 
         case 'll-code':
             text = this.getLL_code();
+            return text;
+
+        case 'what-is-bst':
+            text = this.getBST_whatIs();
+            return text;
+
+        case 'what-is-ll':
+            text = this.getLL_whatIs();
             return text;
 
         default:
@@ -79,6 +89,14 @@ export default class Data {
         this.LL_code = text;
     }
 
+    pushBST_whatIs(text) {
+        this.BST_whatIs = text;
+    }
+
+    pushLL_whatIs(text) {
+        this.LL_whatIs = text;
+    }
+
     // ===============================[PUSH METHODS]=============================== //
 
 
@@ -107,6 +125,14 @@ export default class Data {
         return this.LL_code;
     }
 
+    getBST_whatIs() {
+        return this.BST_whatIs;
+    }
+
+    getLL_whatIs() {
+        return this.LL_whatIs;
+    }
+
     // ===============================[\GET METHODS]=============================== //
     // Returns the list of available algorithms
 }
@@ -126,8 +152,6 @@ data.pushHeroText(
         '  ██║     ██║     ██║╚════╝██╔══██║██║     ██║   ██║██║   ██║██╔══██╗██║   ██║   ██╔══██║██║╚██╔╝██║╚════██║',
         '  ╚██████╗███████╗██║      ██║  ██║███████╗╚██████╔╝╚██████╔╝██║  ██║██║   ██║   ██║  ██║██║ ╚═╝ ██║███████║',
         '   ╚═════╝╚══════╝╚═╝      ╚═╝  ╚═╝╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝',
-        ' ',
-        ' ',
     ],
     // Hero subtext
     [
@@ -147,24 +171,26 @@ data.pushHeroText(
 data.pushHelpText([
     'Available commands:',
     '   ',
-    ' - help',
-    ' - algorithms',
-    ' - run [algorithm name]',
-    ' - themes',
-    ' - theme [theme name]',
-    ' - animation',
-    ' - fullscreen',
-    ' - clear',
-    ' - git',
-    ' - banner',
-    ' - reload',
-    ' - exit',
+    ' - help ____________________ Well you know this one.',
+    ' - algorithms ______________ Display list of algorithms',
+    ' - run [algorithm name] ____ Displays selected algorithm',
+    ' - themes __________________ Show current theme & list of available themes',
+    ' - theme [theme name] ______ Set new active theme',
+    ' - random [theme/algorithm]_ Set new active theme',
+    ' - animation _______________ Displays animation information',
+    ' - fullscreen ______________ Self explanatory innit?',
+    ' - clear ___________________ Clears the CLI',
+    ' - git _____________________ Check out my GitHub profile! <3',
+    ' - banner __________________ Clears the CLI and displays banner',
+    ' - reload __________________ Reloads the page / f5',
+    ' - exit ____________________ If browser allows will close the tab',
 ]);
 // Algorighm list
 data.pushAlgorithmList([
     'bst',
     'binary-search-tree',
     'linked-list',
+    'll',
 ]);
 
 data.pushAlgorithmText([
@@ -855,3 +881,30 @@ export function getLinkedList() {
     return ll;
 }
 `);
+
+data.pushBST_whatIs(`A Balanced Binary Search Tree (BST) is a data structure that stores a sorted collection of elements. It keeps the tree balanced, ensuring that the height difference between left and right subtrees of any node is at most one. This balance allows for efficient operations like search, insert, and delete, all done in logarithmic time complexity, which is faster than unbalanced binary trees.
+<br>
+This structure is valuable because it maintains balance, ensuring efficient search, insert, and delete operations. It's ideal for scenarios requiring a sorted collection of elements, like databases, where quick data search and retrieval are critical. It's also used in implementing sets, maps, and optimizing algorithms such as sorting and searching.
+<br>
+In a BST, searching for a value is like finding a contact in an address book:
+
+1) Start with the Index: Just as an address book begins with an index, a BST starts with a root node.<br>
+2) Compare Values: To find a contact's number, you compare the name with index names. In a BST, you compare the value with the current node's value.<br>
+3) Navigate Efficiently: If the name comes before the current name in the index, you go back; if it's after, you go forward. In a BST, you move to the left child for smaller values and to the right child for larger values.<br>
+4) Repeat Until Found: You continue this process until you find the contact's number or reach the end of the address book (or tree).<br>
+5) Efficient Search: The sorted order of an address book helps you quickly locate a contact. Similarly, a BST's structure allows for quick finding of a value without checking every node.<br>`);
+
+
+data.pushLL_whatIs(`A Linked List is a linear data structure consisting of a sequence of elements, called nodes, where each node points to the next node in the sequence. Unlike arrays, which have a fixed size, linked lists can dynamically grow or shrink in size.
+
+Linked lists are useful for implementing dynamic data structures and are particularly efficient for insertions and deletions at arbitrary positions, as they require only adjusting the pointers to neighboring nodes.
+
+In a linked list, each node contains two components: data and a reference (or pointer) to the next node in the sequence. The first node is called the head, and the last node's next reference is typically null, indicating the end of the list.
+
+Traversing a linked list involves starting at the head node and following the next pointers until reaching the end of the list. Searching for a specific value in a linked list requires traversing the list and comparing each node's value until the desired value is found or the end of the list is reached.
+
+Adding a new node to the beginning of a linked list involves creating a new node, setting its next pointer to the current head node, and then updating the head to point to the new node. Adding a new node to the end of the list requires traversing the list to find the last node and updating its next pointer to point to the new node.
+
+Removing a node from a linked list involves updating the next pointer of the node before the node to be removed to point to the node after the one being removed, effectively bypassing the node to be removed.
+
+Linked lists are used in various applications, including implementing stacks, queues, and adjacency lists for graphs. They are also used in memory allocation and dynamic memory management.`);

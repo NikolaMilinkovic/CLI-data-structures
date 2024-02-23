@@ -382,9 +382,9 @@ export default class DisplaySection {
 
                 this.printLinkedList();
             } else {
-                this.clearUpperSection();
-                this.displayHeader('linked-list');
-                this.upperSection.appendChild(ll.toStringRedGreen(value, 'green'));
+                // this.printHeadTailIndexAnimated(index, argument, color);
+                // this.upperSection.appendChild(ll.toStringRedGreen(result[0], 'green'));
+                this.LL_animatedValuePrint(result[0]);
 
                 this.clearInput(inputValueEl);
                 inputValueEl.placeholder = `v: ${result[0]}   i: ${result[1]}`;
@@ -392,6 +392,42 @@ export default class DisplaySection {
                 inputValueEl.classList.add('placeholder-green');
             }
         }
+    }
+
+    LL_animatedValuePrint(arr) {
+        const normal = ll.toString();
+        let green = '';
+
+        if (!Array.isArray(arr)) {
+            console.log([arr]);
+            green = ll.toStringRedGreen([arr], 'green');
+        } else {
+            green = ll.toStringRedGreen(arr, 'green');
+        }
+
+
+        let count = 0;
+
+        const intervalId = setInterval(() => {
+            if (count % 2 !== 0) {
+                console.log('printing normal');
+                this.clearUpperSection();
+                this.displayHeader('linked-list');
+                this.printLine(normal, 'linked-list-print', this.upperSection);
+            } else {
+                console.log('printing green');
+                this.clearUpperSection();
+                this.displayHeader('linked-list');
+                this.upperSection.appendChild(green);
+            }
+            count++;
+            if (count >= 7) {
+                clearInterval(intervalId);
+                this.clearUpperSection();
+                this.displayHeader('linked-list');
+                this.upperSection.appendChild(green);
+            }
+        }, 300);
     }
 
     LL_showCode() {
@@ -456,6 +492,7 @@ export default class DisplaySection {
         if (inputValue.value) {
             console.log('running if only value');
             const arr = buildArray(inputValue);
+            console.log('looging the arr:');
             console.log(arr);
             this.removePrintAnimated(arr);
             this.clearInput(inputValue);

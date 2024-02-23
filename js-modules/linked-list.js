@@ -208,7 +208,7 @@ class LinkedList {
         }
 
         // If current node's data is the value, move to the next node
-        if (node.data === value) {
+        if (node.data.toString() === value.toString()) {
             return this.removeValueRecursive(node.nextNode, value);
         }
 
@@ -308,15 +308,14 @@ class LinkedList {
             arr = [array];
         }
 
+        // Converts all values inside the array into string for evaluation
+        arr = arr.map((value) => String(value));
         const parent = createDiv(['linked-list-display-div', 'cli-text', 'linked-list-print'], '');
         const classListColored = ['linked-list-print', 'cli-text'];
         const classList = ['linked-list-print', 'cli-text'];
         let current = this.head;
         const elementArr = [];
-        const trueOrFalse = (isHighlighted) => {
-            if (isHighlighted !== -1) return true;
-            return false;
-        };
+        const trueOrFalse = (isHighlighted) => isHighlighted >= 0;
 
         // Color selector
         if (color === 'red') classListColored.push('ll-red');
@@ -326,7 +325,7 @@ class LinkedList {
         // Prints head value in red color, else print normal > pushes to element Arr
         // If element not found in the arr return -1 and compare to -1
         // if element is found in the array it wil return index and will go in if statement
-        let valueFound = arr.indexOf(current.data);
+        let valueFound = arr.indexOf(current.data.toString());
         let isHighlighted = trueOrFalse(valueFound);
 
         if (isHighlighted) {
@@ -341,7 +340,7 @@ class LinkedList {
 
         while (current.nextNode !== null) {
             // Looks for value > translates to true or false
-            valueFound = arr.indexOf(current.data);
+            valueFound = arr.indexOf(current.data.toString());
             isHighlighted = trueOrFalse(valueFound);
 
             if (isHighlighted) {
@@ -353,7 +352,7 @@ class LinkedList {
             current = current.nextNode;
         }
 
-        valueFound = arr.indexOf(current.data);
+        valueFound = arr.indexOf(current.data.toString());
         isHighlighted = trueOrFalse(valueFound);
 
         if (isHighlighted) {
@@ -399,7 +398,15 @@ class LinkedList {
             elementArr = this.paintIndex(elementArr, current, index, classList, classListColored);
             appendChildren(parent, elementArr);
         }
+        if (argument === 'values') {
+            elementArr = this.paintValues(elementArr, current, index, classList, classListColored);
+            appendChildren(parent, elementArr);
+        }
         return parent;
+    }
+
+    paintValues(elementArr, current, index, classList, classListColored) {
+
     }
 
     // Traverses the linked list and paints the index node in selected color

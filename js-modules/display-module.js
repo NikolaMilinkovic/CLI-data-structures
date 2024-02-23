@@ -454,7 +454,9 @@ export default class DisplaySection {
             return;
         }
         if (inputValue.value) {
+            console.log('running if only value');
             const arr = buildArray(inputValue);
+            console.log(arr);
             this.removePrintAnimated(arr);
             this.clearInput(inputValue);
         }
@@ -562,6 +564,9 @@ export default class DisplaySection {
         if (inputRegexValidator(input) === false) return;
 
         const array = BST.sortAndRemoveDuplicates(buildArray(input));
+        let tempArr;
+        if (Array.isArray(array)) tempArr = [...array];
+        else tempArr = [array];
 
         // Evaluate data type and run BST method accordingly
         if (Array.isArray(array)) {
@@ -572,7 +577,8 @@ export default class DisplaySection {
         } else BST.insert(array);
 
         this.BST_displayTreeBalance();
-        this.printBST();
+        this.printAnimatedBST(tempArr, 'green');
+        this.clearInput(input);
     }
 
     BST_removeValue() {
@@ -594,21 +600,33 @@ export default class DisplaySection {
         if (inputRegexValidator(input) === false) return;
 
         const array = BST.sortAndRemoveDuplicates(buildArray(input));
-
-        // pops out elements from bst values array
-        // prevents building the previous array upon build / rebalance click
-        BST.popFromArray(array);
-
-        // Evaluate data type and run BST method accordingly
-        if (Array.isArray(array)) {
-            while (array.length !== 0) {
-                BST.remove(array[0]);
-                array.shift();
-            }
-        } else BST.remove(array);
+        let tempArr;
+        if (Array.isArray(array)) tempArr = [...array];
+        else tempArr = [array];
 
         this.BST_displayTreeBalance();
-        this.printBST();
+        this.printAnimatedBST(tempArr, 'red');
+        this.clearInput(input);
+
+        setTimeout(() => {
+        // pops out elements from bst values array
+        // prevents building the previous array upon build / rebalance click
+            BST.popFromArray(array);
+
+            // Evaluate data type and run BST method accordingly
+            if (Array.isArray(array)) {
+                while (array.length !== 0) {
+                    BST.remove(array[0]);
+                    array.shift();
+                }
+            } else BST.remove(array);
+
+            BST.clearInOrder();
+            BST.inOrder();
+            this.clearUpperSection();
+            this.displayHeader('bst');
+            this.prettyPrint(BST.root);
+        }, 2200);
     }
 
     BST_isTreeBalanced() {
@@ -647,10 +665,11 @@ export default class DisplaySection {
 
 
     // Method for printing BST
-    printBST() {
+    printBST(array) {
         this.clearUpperSection();
         this.displayHeader('bst');
-        this.prettyPrint(BST.root);
+        console.log(`printBST array = ${array}`);
+        this.prettyPrint(BST.root, array);
     }
 
     // printHeadTailIndexAnimated
@@ -862,19 +881,74 @@ export default class DisplaySection {
         }
     }
 
+    testPrinter(node) {
+        this.clearDisplaySection();
+        this.displayHeader('bst');
+        this.prettyPrint(node);
+    }
+
+    // printHeadTailIndexAnimated
+    printAnimatedBST(array, color) {
+        let count = 0;
+
+        const intervalId = setInterval(() => {
+            if (count % 2 !== 0) {
+                console.log('printing normal');
+                this.clearUpperSection();
+                this.displayHeader('bst');
+                this.prettyPrint(BST.root, array, color);
+            } else {
+                console.log('printing green');
+                this.clearUpperSection();
+                this.displayHeader('bst');
+                this.prettyPrint(BST.root);
+            }
+            count++;
+            if (count >= 7) {
+                clearInterval(intervalId);
+                this.clearUpperSection();
+                this.displayHeader('bst');
+                this.prettyPrint(BST.root);
+            }
+        }, 300);
+    }
+
     // Method used for printing Tree structures
-    prettyPrint = (node, prefix = '', isLeft = true) => {
+    prettyPrint = (node, highlight, color = 'green', prefix = '', isLeft = true) => {
         if (node === null) {
             return;
         }
         if (node.right !== null) {
-            this.prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
+            this.prettyPrint(node.right, highlight, color, `${prefix}${isLeft ? '│   ' : '    '}`, false);
         }
-        this.printLine(`${prefix}${isLeft ? '└── ' : '┌── '}${node.value}`, 'll-red', this.upperSection);
+
+        const div = createDiv(['linked-list-display-div', 'cli-text', 'bst-pretty-print'], '');
+        const standardClass = ['cli-text', 'bst-pretty-print'];
+        const highlightClass = ['cli-text', 'bst-pretty-print'];
+        if (color === 'red') highlightClass.push('bst-highlight-red');
+        if (color === 'green') highlightClass.push('bst-highlight-green');
+        const elementArr = [];
+
+        elementArr.push(createPara(`${prefix}${isLeft ? '└──' : '┌──'}`, standardClass, '', 'para'));
+
+        console.log(`highligh arr value = ${highlight}`);
+        if (highlight) {
+            if (highlight.includes(node.value)) {
+                elementArr.push(createPara(`(${node.value})`, highlightClass, '', 'para'));
+            } else {
+                elementArr.push(createPara(`(${node.value})`, standardClass, '', 'para'));
+            }
+        } else {
+            elementArr.push(createPara(`(${node.value})`, standardClass, '', 'para'));
+        }
+
+        appendChildren(div, elementArr);
+        this.upperSection.appendChild(div);
         if (node.left !== null) {
-            this.prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
+            this.prettyPrint(node.left, highlight, color, `${prefix}${isLeft ? '    ' : '│   '}`, true);
         }
     };
+
 
     // Clear input
     clearInput(input) {

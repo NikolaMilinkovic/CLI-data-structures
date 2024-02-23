@@ -16,6 +16,8 @@ export default class Tree {
         this.preOrderValues = [];
         this.inOrderValues = [];
         this.postOrderValues = [];
+        this.insertStepsArray = [];
+        this.insertAnimationArray = [];
     }
 
     // Removes provided value from the constructor array
@@ -77,6 +79,10 @@ export default class Tree {
         }
 
         return root;
+    }
+
+    getInsertAnimationArr() {
+        return this.insertAnimationArray;
     }
 
     // Method for removing values from the Tree

@@ -187,6 +187,20 @@ button#btn-show-linked-list{
     line-height: 1.8;
     font-size: 20px !important;
 }
+.bst-pretty-print{
+    /* color: var(--text-color); */
+    display: flex;
+    align-items: flex-end !important;
+    white-space: pre-wrap;
+    line-height: 1.6;
+    font-size: 16px !important;
+}
+.bst-highlight-red{
+    color: #c40202 !important;
+}
+.bst-highlight-green{
+    color: #08FF83 !important;
+}
 .btn-width-160{
     width: 160px;
 }

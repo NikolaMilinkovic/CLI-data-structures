@@ -336,6 +336,7 @@ class LinkedList {
         } else {
             elementArr.push(createPara(`<br>[Head]=>(${current.data})───>`, classList, '', 'para'));
         }
+        current = current.nextNode;
 
 
         while (current.nextNode !== null) {
@@ -350,6 +351,16 @@ class LinkedList {
                 elementArr.push(createPara(`(${current.data})───>`, classList, '', 'para'));
             }
             current = current.nextNode;
+        }
+
+        valueFound = arr.indexOf(current.data);
+        isHighlighted = trueOrFalse(valueFound);
+
+        if (isHighlighted) {
+            elementArr.push(createPara(`(${current.data})`, classListColored, '', 'para'));
+            elementArr.push(createPara('───>', classList, '', 'para'));
+        } else {
+            elementArr.push(createPara(`(${current.data})───>`, classList, '', 'para'));
         }
 
         elementArr.push(createPara('[end]', classList, '', 'para'));

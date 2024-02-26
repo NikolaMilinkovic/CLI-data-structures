@@ -24,7 +24,7 @@ export default function draw() {
 
     animationFrameId = requestAnimationFrame(draw);
 }
-// animationFrameId = requestAnimationFrame(draw);
+animationFrameId = requestAnimationFrame(draw);
 
 export function stopAnimation() {
     cancelAnimationFrame(animationFrameId);

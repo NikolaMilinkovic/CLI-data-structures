@@ -72,6 +72,7 @@ export default class CLIComponent {
             const subText = data.getData('hero', 0, 1);
             const instructions = document.createElement('p');
             instructions.classList.add('cli-text');
+            instructions.classList.add('hero-subtext');
             typeWriteText(subText, instructions, heroContainer, 10, true, true);
 
             if (input) {

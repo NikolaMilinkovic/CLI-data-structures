@@ -200,7 +200,7 @@ a{
 }
 
 /* Responsive design settings */
-@media screen and (max-width: 1650px) {
+@media screen and (max-width: 1350px) {
     #content{
         display: grid;
         grid-template-columns: 1fr;

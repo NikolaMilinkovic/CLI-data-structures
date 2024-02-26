@@ -1,7 +1,7 @@
 /* eslint-disable no-alert */
 /* eslint-disable max-len */
 import {
-    createPara, createInput, createButton, appendChildren, createDiv, createImg,
+    createPara, createInput, createButton, appendChildren, createDiv, createImg, createDropdownList,
 } from './element-builder.js';
 import { getBST } from './bst.js';
 import { getLinkedList } from './linked-list.js';
@@ -10,10 +10,12 @@ import {
     inputRegexValidator, buildArray, isBalancedTreeText, clearDiv,
 } from './helper-functions.js';
 import { getData } from './data.js';
+import { getHashMap } from './hashMap.js';
 
 const data = getData();
 const BST = getBST();
 const ll = getLinkedList();
+const hm = getHashMap();
 
 
 export default class DisplaySection {
@@ -59,11 +61,20 @@ export default class DisplaySection {
             this.getBSTControls();
         }
         // Linked List
-        else if (parameter === 'linked-list') {
+        else if (parameter === 'linked-list' || parameter === 'll') {
             this.clearDisplaySection();
             this.displayHeader(parameter);
             this.getLinkedListControls();
             this.printLinkedList();
+        }
+        // Hash map
+        else if (parameter === 'hash-map' || parameter === 'hm') {
+            console.log('entered hm in display');
+            this.clearDisplaySection();
+            this.displayHeader(parameter);
+            this.getHashMapControls();
+            this.HM_updateHmSize();
+            this.HM_printAnimated(hm.printBucketData(''));
         }
     }
 
@@ -110,6 +121,22 @@ export default class DisplaySection {
         appendChildren(mainControlDiv, [btnCollapse, newList, insert, remove, find, toggle]);
         this.lowerSection.appendChild(mainControlDiv);
     }
+
+    // Methods for creating Hash Map controls
+    getHashMapControls() {
+        const btnCollapse = this.CNTRL_buttonCollapse();
+        const mainControlDiv = createDiv(['linked-list-main-control-div'], 'hash-map-main-control-div');
+        const newHm = this.HM_newHashMapControls();
+        const insertRemove = this.HM_insertRemoveControls();
+        const find = this.HM_findControls();
+        const clearEntries = this.HM_ClearEntriesControls();
+        const showCode = this.HM_showCode();
+
+
+        appendChildren(mainControlDiv, [btnCollapse, newHm, insertRemove, find, clearEntries, showCode]);
+        this.lowerSection.appendChild(mainControlDiv);
+        this.HM_updateHmSize();
+    }
     // ==========================[\CONTROLS DISPLAY LOGIC]=========================== //
 
 
@@ -135,6 +162,7 @@ export default class DisplaySection {
         // Compare values
         const ll_divId = 'linked-list-main-control-div';
         const BST_divId = 'bst-main-control-div';
+        const HM_divId = 'hash-map-main-control-div';
 
         // Case LL
         if (parentDivId === ll_divId) {
@@ -153,8 +181,15 @@ export default class DisplaySection {
             } else {
                 this.CNTRL_expandBST(parentDiv);
             }
-        } else if (parentDivId === 'traversals-div') {
-            alert('we good');
+        }
+        // Case HM
+        else if (parentDivId === HM_divId) {
+            // Run method based on present button id
+            if (btnId === 'btn-collapse') {
+                this.CNTRL_collapseHM(parentDiv);
+            } else {
+                this.CNTRL_expandHM(parentDiv);
+            }
         }
     }
 
@@ -176,13 +211,19 @@ export default class DisplaySection {
         div.appendChild(button);
     }
 
+    CNTRL_collapseHM(div) {
+        clearDiv(div);
+        this.CNTRL_toggleDisplayGridRows('1fr 0.2fr');
+        const button = this.CNTRL_buttonExpand();
+        div.appendChild(button);
+    }
+
     CNTRL_buttonExpand() {
         const button = createButton('', [], 'btn-expand');
         const img = createImg('./img/expand-black.png', [], 'cntrl-expand-icon', false);
         button.appendChild(img);
 
         button.addEventListener('click', this.CNTRL_buttonCollapseLogic);
-        console.log('button expand called');
 
         return button;
     }
@@ -202,6 +243,12 @@ export default class DisplaySection {
         this.CNTRL_toggleDisplayGridRows('1fr 0.6fr');
         this.clearLowerSection();
         this.getLinkedListControls();
+    }
+
+    CNTRL_expandHM() {
+        this.CNTRL_toggleDisplayGridRows('1fr 0.6fr');
+        this.clearLowerSection();
+        this.getHashMapControls();
     }
 
     CNTRL_toggleDisplayGridRows(fr) {
@@ -778,6 +825,7 @@ export default class DisplaySection {
         this.upperSection.appendChild(ll.toStringRedGreen(arr));
     }
 
+
     // Traversal button toggle function
     toggleBSTControls() {
         if (this.bstControlTracker === 0) {
@@ -845,6 +893,9 @@ export default class DisplaySection {
         if (parameter === 'what-is-bst') return 'What is Binary Search Tree?';
         if (parameter === 'll-code') return 'Linked List Javascript code';
         if (parameter === 'what-is-ll') return 'What is a Linked List?';
+        if (parameter === 'hash-map' || parameter === 'hm') return 'Hash Map';
+        if (parameter === 'hm-code') return 'Hash Map Javascript code';
+        if (parameter === 'what-is-hm') return 'What is a Hash Map?';
     }
 
     // Displays header on the DisplaySection
@@ -866,6 +917,15 @@ export default class DisplaySection {
         }
         if (parameter === 'what-is-ll') {
             this.printLine(this.getHeader('what-is-ll'), 'align-center', this.upperSection);
+        }
+        if (parameter === 'hash-map' || parameter === 'hm') {
+            this.printLine(this.getHeader('hash-map'), 'align-center', this.upperSection);
+        }
+        if (parameter === 'hm-code') {
+            this.printLine(this.getHeader('hm-code'), 'align-center', this.upperSection);
+        }
+        if (parameter === 'what-is-hm') {
+            this.printLine(this.getHeader('what-is-hm'), 'align-center', this.upperSection);
         }
     }
 
@@ -986,6 +1046,320 @@ export default class DisplaySection {
         }
     };
 
+    // =========================================================================================
+
+    // Handls printing hash map on the display
+    HM_insertRemoveControls() {
+        const div = createDiv(['linked-list-control-div', 'grid-1-3-1'], '');
+        const divInputs = createDiv(['linked-list-control-div', 'grid-1-1'], '');
+        const buttonInsert = createButton('Insert', ['hm-btn', 'margin-right-2rem'], 'btn-insert-hash-map');
+        const buttonRemove = createButton('Remove', ['hm-btn', 'margin-left-2rem'], 'btn-remove-hash-map');
+
+        const inputKey = createInput('key', ['bst-input', 'll-insert-input'], 'input-insert-key-hash-map');
+        inputKey.autocomplete = 'off';
+        const inputValue = createInput('value', ['bst-input', 'll-insert-input'], 'input-insert-value-hash-map');
+        inputValue.autocomplete = 'off';
+
+        buttonInsert.addEventListener('click', () => {
+            this.HM_insertLogic();
+        });
+        buttonRemove.addEventListener('click', () => {
+            this.HM_removeLogic();
+        });
+
+        appendChildren(divInputs, [inputKey, inputValue]);
+        appendChildren(div, [buttonInsert, divInputs, buttonRemove]);
+        return div;
+    }
+
+    HM_insertLogic() {
+        const inputKey = document.getElementById('input-insert-key-hash-map');
+        const inputValue = document.getElementById('input-insert-value-hash-map');
+
+        if (inputKey.value !== '' && inputValue.value !== '') {
+            const startHmState = hm.printBucketData('');
+            hm.set(inputKey.value, inputValue.value);
+            const coloredHmState = hm.printBucketData('', inputKey.value, 'green');
+            const endHmState = hm.printBucketData('');
+            this.HM_InputRemoveAnimatedPrint(startHmState, coloredHmState, endHmState);
+            this.clearInput(inputKey);
+            this.clearInput(inputValue);
+        }
+    }
+
+    HM_removeLogic() {
+        const inputKey = document.getElementById('input-insert-key-hash-map');
+
+        if (inputKey.value !== '') {
+            const startHmState = hm.printBucketData('');
+            const coloredHmState = hm.printBucketData('', inputKey.value, 'red');
+            hm.remove(inputKey.value);
+            const endHmState = hm.printBucketData('');
+            this.HM_InputRemoveAnimatedPrint(startHmState, coloredHmState, endHmState);
+            this.clearInput(inputKey);
+        }
+    }
+
+    HM_newHashMapControls() {
+        const div = createDiv(['display-flex'], '');
+        const divNewHashMap = createDiv(['display-flex'], '');
+        const divCurrentSize = createDiv(['display-flex'], '');
+        const buttonNewHm = createButton('Create new hash map', ['hm-btn', 'margin-right-2rem', 'width-180'], 'btn-new-hash-map');
+        const dropdownOptions = [
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+        ];
+        const dropdownLabel = createPara('Size:', ['cli-text', 'hm-size-label'], '');
+        const hmSizeDropdown = createDropdownList(dropdownOptions, dropdownOptions[8], ['hm-dropdown', 'margin-right-2rem'], 'dropdown-size-hash-map');
+        const currentSizeLabel = createPara('Current:', ['cli-text', 'hm-size-label'], '');
+        const inputCurrentSize = createInput('', ['bst-input', 'll-insert-input'], 'input-insert-current-size-hash-map');
+        inputCurrentSize.disabled = true;
+        const buttonGenerateValues = createButton('Generate random values', ['hm-btn', 'margin-left-2rem', 'width-180'], 'btn-generate-values-hash-map');
+
+        buttonNewHm.addEventListener('click', () => {
+            this.HM_newHmLogic();
+            this.HM_updateHmSize();
+        });
+        buttonGenerateValues.addEventListener('click', () => {
+            hm.clear();
+            this.HM_generateRandomLogic();
+        });
+        appendChildren(divNewHashMap, [buttonNewHm, dropdownLabel, hmSizeDropdown]);
+        appendChildren(divCurrentSize, [currentSizeLabel, inputCurrentSize]);
+        appendChildren(div, [divNewHashMap, divCurrentSize, buttonGenerateValues]);
+        return div;
+    }
+
+    HM_updateHmSize() {
+        const input = document.getElementById('input-insert-current-size-hash-map');
+        input.placeholder = hm.getSize();
+    }
+
+    HM_newHmLogic() {
+        const sizeSelector = document.getElementById('dropdown-size-hash-map');
+        const size = parseInt(sizeSelector.value);
+        hm.newHashMap(size);
+        this.HM_printAnimated(hm.printBucketData(''));
+    }
+
+    HM_generateRandomLogic() {
+        const loop = hm.getSize() * 2 - 1;
+        for (let i = 0; i <= loop; i++) {
+            hm.set(data.getHM_randomKey(), data.getHM_randomValue());
+        }
+
+        this.HM_printAnimated(hm.printBucketData(''));
+    }
+
+    HM_findControls() {
+        const div = createDiv(['display-flex'], '');
+        const buttonFind = createButton('Find', ['hm-btn', 'margin-right-2rem', 'width-180'], 'btn-new-hash-map');
+        const inputFind = createInput('key', ['bst-input', 'll-insert-input'], 'input-insert-find-hash-map');
+
+        buttonFind.addEventListener('click', () => {
+            this.HM_find();
+        });
+
+        appendChildren(div, [buttonFind, inputFind]);
+        return div;
+    }
+
+    HM_find() {
+        const input = document.getElementById('input-insert-find-hash-map');
+        const result = hm.get(input.value.toString());
+        this.clearInput(input);
+        if (result[0] === true) {
+            input.placeholder = result[1];
+            input.classList.add('placeholder-green');
+            input.classList.remove('placeholder-red');
+        } else {
+            input.placeholder = `${input.value} key not found.`;
+            input.classList.remove('placeholder-green');
+            input.classList.add('placeholder-red');
+        }
+    }
+
+
+    HM_ClearEntriesControls() {
+        const div = createDiv(['display-flex'], '');
+        const showAllLabel = createPara('Show complete list of: ', ['cli-text', 'hm-size-label'], '');
+        const dropdownOptions = ['select data', 'keys', 'values', 'entries'];
+        const hmEntriesDropdown = createDropdownList(dropdownOptions, dropdownOptions[0], ['hm-dropdown-entries', 'margin-left-2rem', 'margin-right-auto'], 'dropdown-entries-hash-map');
+        const buttonClearHm = createButton('Clear hash map', ['hm-btn', 'margin-left-2rem', 'width-180'], 'btn-generate-values-hash-map');
+
+        hmEntriesDropdown.addEventListener('change', () => {
+            console.log('DROPDOWN CHANGES');
+            this.HM_EntriesLogic();
+        });
+        buttonClearHm.addEventListener('click', () => {
+            this.HM_clear();
+        });
+
+        appendChildren(div, [showAllLabel, hmEntriesDropdown, buttonClearHm]);
+        return div;
+    }
+
+    HM_EntriesLogic() {
+        const dropdown = document.getElementById('dropdown-entries-hash-map');
+        let hmData = '';
+        const elements = [];
+        // const index = '';
+        switch (dropdown.selectedIndex) {
+        case 1:
+            // Keys
+            hmData = hm.keys();
+            this.HM_handleKeysValuesDisplayLogic(elements, hmData, dropdown, 'keys', false);
+            break;
+        case 2:
+            // Values
+            hmData = hm.values();
+            this.HM_handleKeysValuesDisplayLogic(elements, hmData, dropdown, 'values', false);
+            break;
+        case 3:
+            // Entries
+            hmData = hm.entries();
+            this.HM_handleKeysValuesDisplayLogic(elements, hmData, dropdown, 'entries', true);
+            break;
+        default:
+            break;
+        }
+    }
+
+    HM_handleKeysValuesDisplayLogic(elements, hmData, dropdown, displayType, entries = false) {
+        elements = [];
+        elements.push(createPara(`<br>Displaying ${displayType}`, ['hash-map-entries-print', 'cli-text', 'hash-map-head'], '', 'pre'));
+        hmData.forEach((key, index) => {
+            const div = createDiv(['hash-map-entries-print', 'cli-text', 'display-flex-wrap'], '');
+            div.appendChild(createPara(`[Hash: ${index + 1}] `, ['hash-map-entries-print', 'cli-text', 'hash-map-head'], '', 'para'));
+            key[1].forEach((item) => {
+                if (entries) {
+                    div.appendChild(createPara(`[${item[0]}, ${item[1]}] `, ['hash-map-entries-print', 'cli-text'], '', 'para'));
+                } else {
+                    div.appendChild(createPara(`${item}, `, ['hash-map-entries-print', 'cli-text'], '', 'para'));
+                }
+            });
+            elements.push(div);
+        });
+        this.HM_printAnimated(elements);
+        dropdown.selectedIndex = 0;
+    }
+
+    HM_clear() {
+        const coloredState = hm.printBucketData('', '', 'remove-all');
+        const startState = hm.printBucketData('');
+
+        hm.clear();
+        const endState = hm.printBucketData('');
+        this.HM_InputRemoveAnimatedPrint(startState, coloredState, endState);
+    }
+
+    HM_showCode() {
+        const controlsDiv = createDiv(['linked-list-remove-control-div'], 'show-code-parent-div-hm');
+        const toggleShowDisplay = createDiv(['linked-list-show-commands-div'], 'show-code-child-div-hm');
+
+        const showCode = createButton('Show code', ['remove-ll-btn', 'flex-and-centers'], 'btn-show-code-hash-map');
+
+
+        const showHashMap = createButton('Show Hash Map', ['remove-ll-btn', 'flex-and-centers'], 'btn-show-hash-map');
+
+        const whatIs = createButton('What is a Hash Map', ['remove-ll-btn', 'flex-and-centers'], 'btn-what-is-hash-map');
+
+        whatIs.addEventListener('click', () => { this.HM_whatIsLogic(); });
+        showCode.addEventListener('click', () => { this.HM_showCodeLogic(); });
+        showHashMap.addEventListener('click', () => { this.HM_showHashMapLogic(); });
+
+
+        controlsDiv.appendChild(appendChildren(toggleShowDisplay, [whatIs, showCode, showHashMap]));
+
+        return controlsDiv;
+    }
+
+    HM_showHashMapLogic() {
+        this.clearUpperSection();
+        this.displayHeader('hash-map');
+        const hmElements = hm.printBucketData('');
+        hmElements.forEach((element) => {
+            this.upperSection.appendChild(element);
+        });
+    }
+
+    HM_whatIsLogic() {
+        this.clearUpperSection();
+        this.displayHeader('what-is-hm');
+        this.printCode(data.getData('what-is-hm'), '', this.upperSection);
+    }
+
+    HM_showCodeLogic() {
+        this.clearUpperSection();
+        this.displayHeader('hm-code');
+        this.printCode(data.getData('hm-code'), 'language-javascript', this.upperSection);
+        Prism.highlightAll();
+    }
+
+    // Handles print animation of hash map
+    HM_printAnimatedEntries(array) {
+        this.clearUpperSection();
+        this.displayHeader('hash-map');
+        let i = 1;
+
+        const intervalId = setInterval(() => {
+            this.clearUpperSection();
+            this.displayHeader('hash-map');
+            if (i <= array.length) {
+                appendChildren(this.upperSection, array.slice(0, [i]));
+                i++;
+            } else {
+                this.clearUpperSection();
+                this.displayHeader('hash-map');
+                appendChildren(this.upperSection, array.slice(0, [i]));
+                clearInterval(intervalId);
+            }
+        }, 200);
+    }
+
+    // Handles print animation of hash map
+    HM_printAnimated(array) {
+        let i = 1;
+
+        const intervalId = setInterval(() => {
+            this.clearUpperSection();
+            this.displayHeader('hash-map');
+            if (i <= array.length) {
+                appendChildren(this.upperSection, array.slice(0, [i]));
+                i++;
+            } else {
+                this.clearUpperSection();
+                this.displayHeader('hash-map');
+                appendChildren(this.upperSection, array.slice(0, [i]));
+                clearInterval(intervalId);
+            }
+        }, 200);
+    }
+
+    // Handles print animation of hash map
+    HM_InputRemoveAnimatedPrint(startState, coloredState, endState) {
+        let i = 1;
+
+        const intervalId = setInterval(() => {
+            if (i % 2 === 0) {
+                this.clearUpperSection();
+                this.displayHeader('hash-map');
+                appendChildren(this.upperSection, coloredState);
+            } else {
+                this.clearUpperSection();
+                this.displayHeader('hash-map');
+                appendChildren(this.upperSection, startState);
+            }
+
+            if (i === 7) {
+                this.clearUpperSection();
+                this.displayHeader('hash-map');
+                appendChildren(this.upperSection, endState);
+                clearInterval(intervalId);
+            }
+            i++;
+        }, 300);
+    }
+
 
     // Clear input
     clearInput(input) {
@@ -1000,3 +1374,5 @@ ll.createNewList(['Pikachu', 'Charizard', 'Eevee', 'MewTwo', 'Bulbasaur', 'Snorl
 export function getDisplay() {
     return display;
 }
+
+

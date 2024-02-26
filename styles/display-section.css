@@ -48,6 +48,13 @@
     width: 100%;
     margin-top: auto;
 }
+.display-flex{
+    display: flex;
+}
+.display-flex-wrap{
+    display: flex;
+    flex-wrap: wrap;
+}
 .linked-list-control-div{
     display: grid;
     grid-template-columns: 3fr 2fr;
@@ -132,12 +139,14 @@
     display: grid;
 
 }
-#show-code-parent-div{
+#show-code-parent-div,
+#show-code-parent-div-hm{
     display: flex;
     align-items: center;
     justify-content: center;
 }
-#show-code-child-div{
+#show-code-child-div,
+#show-code-child-div-hm{
     width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -145,7 +154,10 @@
 }
 button#btn-show-code-linked-list,
 button#btn-show-linked-list,
-button#btn-what-is-linked-list{
+button#btn-what-is-linked-list,
+button#btn-show-code-hash-map,
+button#btn-show-hash-map,
+button#btn-what-is-hash-map{
     width: 100%;
     display: flex;
     white-space: unset !important;
@@ -166,6 +178,9 @@ button#btn-show-linked-list{
 }
 #btn-find-linked-list{
     min-width: 160px;
+}
+.width-180{
+    width: 180px;
 }
 .placeholder-red::placeholder{
     color: #c40202;
@@ -253,8 +268,48 @@ button#btn-show-linked-list{
 @keyframes typing-hero {
     from {width: 0}
 }
-
-
+/* ==================[ HASH MAP ]================== */
+.hash-map-print{
+    display: flex;
+    align-items: flex-end !important;
+    white-space: pre-wrap;
+    flex: 0 0 auto;
+    line-height: 1.2;
+    font-size: 15px !important;
+}
+.hash-map-entries-print{
+    display: flex;
+    align-items: flex-end !important;
+    white-space: pre-wrap;
+    flex: 0 0 auto;
+    line-height: 1.4;
+    font-size: 18px !important;
+    /* overflow: hidden; */
+    word-wrap: break-word !important;
+}
+.hash-map-head{
+    color: var(--border-color) !important;
+}
+.hm-btn{
+    white-space: nowrap;
+    font-family: var(--font-family);
+    min-width: 180px;
+}
+.hm-dropdown {
+    width: 50px !important;
+}
+.hm-dropdown-entries{
+    display: flex;
+    flex-grow: 1;
+    text-align: center;
+}
+.hm-size-label{
+    white-space: nowrap;
+}
+#input-insert-current-size-hash-map::placeholder{
+    color: #08FF83 !important;
+}
+/* ==================[ \HASH MAP ]================== */
 /* Prism.js */
 pre[class*="language-"] {
     background-color: transparent;

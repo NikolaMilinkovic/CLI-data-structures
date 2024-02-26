@@ -2,12 +2,16 @@ export default class Data {
     constructor() {
         this.hero = [];
         this.help = [];
-        this.algorithmList = [];
-        this.algorithmText = [];
+        this.dataStructureList = [];
+        this.dataStructureText = [];
         this.BST_code = '';
         this.LL_code = '';
+        this.HM_code = '';
         this.BST_whatIs = '';
         this.LL_whatIs = '';
+        this.HM_whatIs = '';
+        this.HM_randomKeys = '';
+        this.HM_randomValues = '';
     }
 
     // ===============================[DATA RETRIEVAL METHODS]=============================== //
@@ -26,12 +30,12 @@ export default class Data {
             text = this.getHelpText(index);
             break;
 
-        case 'algorithm-list':
-            text = this.getAlgorithmList(index);
+        case 'data-structure-list':
+            text = this.getDSList(index);
             return text;
 
-        case 'algorithm-text':
-            text = this.getAlgorithmText(index);
+        case 'data-structure-text':
+            text = this.getDSText(index);
             break;
 
         case 'bst-code':
@@ -42,11 +46,19 @@ export default class Data {
             text = this.getLL_code();
             return text;
 
+        case 'hm-code':
+            text = this.getHM_code();
+            return text;
+
         case 'what-is-bst':
             text = this.getBST_whatIs();
             return text;
 
         case 'what-is-ll':
+            text = this.getLL_whatIs();
+            return text;
+
+        case 'what-is-hm':
             text = this.getLL_whatIs();
             return text;
 
@@ -72,13 +84,13 @@ export default class Data {
         this.help.push(text);
     }
 
-    // Pushes list of algorithms into algorithms array
-    pushAlgorithmList(text) {
-        this.algorithmList.push(text);
+    // Pushes list of data structures into dataStructuresList array
+    pushDSList(text) {
+        this.dataStructureList.push(text);
     }
 
-    pushAlgorithmText(text) {
-        this.algorithmText.push(text);
+    pushDSText(text) {
+        this.dataStructureText.push(text);
     }
 
     pushBST_code(text) {
@@ -89,12 +101,28 @@ export default class Data {
         this.LL_code = text;
     }
 
+    pushHM_code(text) {
+        this.HM_code = text;
+    }
+
     pushBST_whatIs(text) {
         this.BST_whatIs = text;
     }
 
     pushLL_whatIs(text) {
         this.LL_whatIs = text;
+    }
+
+    pushHM_whatIs(text) {
+        this.HM_whatIs = text;
+    }
+
+    pushHM_randomKeys(arr) {
+        this.HM_randomKeys = arr;
+    }
+
+    pushHM_randomValues(arr) {
+        this.HM_randomValues = arr;
     }
 
     // ===============================[PUSH METHODS]=============================== //
@@ -109,12 +137,12 @@ export default class Data {
         return this.help[index];
     }
 
-    getAlgorithmList(index) {
-        return this.algorithmList[index];
+    getDSList(index) {
+        return this.dataStructureList[index];
     }
 
-    getAlgorithmText(index) {
-        return this.algorithmText[index];
+    getDSText(index) {
+        return this.dataStructureText[index];
     }
 
     getBST_code() {
@@ -125,6 +153,10 @@ export default class Data {
         return this.LL_code;
     }
 
+    getHM_code() {
+        return this.HM_code;
+    }
+
     getBST_whatIs() {
         return this.BST_whatIs;
     }
@@ -133,8 +165,20 @@ export default class Data {
         return this.LL_whatIs;
     }
 
+    getHM_whatIs() {
+        return this.HM_whatIs;
+    }
+
+    getHM_randomKey() {
+        return this.HM_randomKeys[getRandomNum(0, this.HM_randomKeys.length - 1)];
+    }
+
+    getHM_randomValue() {
+        return this.HM_randomValues[getRandomNum(0, this.HM_randomValues.length - 1)];
+    }
+
     // ===============================[\GET METHODS]=============================== //
-    // Returns the list of available algorithms
+    // Returns the list of available data structures
 }
 
 const data = new Data();
@@ -143,26 +187,44 @@ export function getData() {
     return data;
 }
 
+function getRandomNum(min, max) {
+    const rand = Math.floor(Math.random() * (max - min + 1)) + min;
+    return rand;
+}
+console.log('LENGTHS');
+console.log(data.HM_randomKeys.length);
+console.log(data.HM_randomValues.length);
+
+
 data.pushHeroText(
     // Hero text
     [
-        '   ██████╗██╗     ██╗       █████╗ ██╗      ██████╗  ██████╗ ██████╗ ██╗████████╗██╗  ██╗███╗   ███╗███████╗',
-        '  ██╔════╝██║     ██║      ██╔══██╗██║     ██╔════╝ ██╔═══██╗██╔══██╗██║╚══██╔══╝██║  ██║████╗ ████║██╔════╝',
-        '  ██║     ██║     ██║█████╗███████║██║     ██║  ███╗██║   ██║██████╔╝██║   ██║   ███████║██╔████╔██║███████╗',
-        '  ██║     ██║     ██║╚════╝██╔══██║██║     ██║   ██║██║   ██║██╔══██╗██║   ██║   ██╔══██║██║╚██╔╝██║╚════██║',
-        '  ╚██████╗███████╗██║      ██║  ██║███████╗╚██████╔╝╚██████╔╝██║  ██║██║   ██║   ██║  ██║██║ ╚═╝ ██║███████║',
-        '   ╚═════╝╚══════╝╚═╝      ╚═╝  ╚═╝╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝',
+        ' ██████╗██╗     ██╗      ██████╗  █████╗ ████████╗ █████╗       ███████╗████████╗██████╗ ██╗   ██╗ ██████╗████████╗██╗   ██╗██████╗ ███████╗███████╗',
+        '██╔════╝██║     ██║      ██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗      ██╔════╝╚══██╔══╝██╔══██╗██║   ██║██╔════╝╚══██╔══╝██║   ██║██╔══██╗██╔════╝██╔════╝',
+        '██║     ██║     ██║█████╗██║  ██║███████║   ██║   ███████║█████╗███████╗   ██║   ██████╔╝██║   ██║██║        ██║   ██║   ██║██████╔╝█████╗  ███████╗',
+        '██║     ██║     ██║╚════╝██║  ██║██╔══██║   ██║   ██╔══██║╚════╝╚════██║   ██║   ██╔══██╗██║   ██║██║        ██║   ██║   ██║██╔══██╗██╔══╝  ╚════██║',
+        '╚██████╗███████╗██║      ██████╔╝██║  ██║   ██║   ██║  ██║      ███████║   ██║   ██║  ██║╚██████╔╝╚██████╗   ██║   ╚██████╔╝██║  ██║███████╗███████║',
+        ' ╚═════╝╚══════╝╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝      ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝  ╚═════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝╚══════╝',
+        '',
     ],
+    // [
+    //     '   ██████╗██╗     ██╗       █████╗ ██╗      ██████╗  ██████╗ ██████╗ ██╗████████╗██╗  ██╗███╗   ███╗███████╗',
+    //     '  ██╔════╝██║     ██║      ██╔══██╗██║     ██╔════╝ ██╔═══██╗██╔══██╗██║╚══██╔══╝██║  ██║████╗ ████║██╔════╝',
+    //     '  ██║     ██║     ██║█████╗███████║██║     ██║  ███╗██║   ██║██████╔╝██║   ██║   ███████║██╔████╔██║███████╗',
+    //     '  ██║     ██║     ██║╚════╝██╔══██║██║     ██║   ██║██║   ██║██╔══██╗██║   ██║   ██╔══██║██║╚██╔╝██║╚════██║',
+    //     '  ╚██████╗███████╗██║      ██║  ██║███████╗╚██████╔╝╚██████╔╝██║  ██║██║   ██║   ██║  ██║██║ ╚═╝ ██║███████║',
+    //     '   ╚═════╝╚══════╝╚═╝      ╚═╝  ╚═╝╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝',
+    // ],
     // Hero subtext
     [
-        '   Welcome to CLI-Algorithms to select an algorithm type',
+        '   Welcome to CLI-Data-Structures, to select a data structure type',
         '   ',
-        '       run [algorithm name]',
+        '       run [Data structure name]',
         '   ',
         '       example:',
         '       run binary-search-tree',
         '   ',
-        '   To see a list of available algorithms type \'algorithms\'',
+        '   To see a list of available data structures type \'data-structures\'',
         '   ',
         '   Type \'help\'for help and list of options/commands.',
     ],
@@ -172,11 +234,11 @@ data.pushHelpText([
     'Available commands:',
     '   ',
     ' - help ____________________ Well you know this one.',
-    ' - algorithms ______________ Display list of algorithms',
-    ' - run [algorithm name] ____ Displays selected algorithm',
+    ' - data-structures _________ Display list of data structures',
+    ' - run [data structure name] Displays selected data structure',
     ' - themes __________________ Show current theme & list of available themes',
     ' - theme [theme name] ______ Set new active theme',
-    ' - random [theme/algorithm]_ Set new active theme',
+    ' - random [data structure]__ Set new active theme',
     ' - animation _______________ Displays animation information',
     ' - fullscreen ______________ Self explanatory innit?',
     ' - clear ___________________ Clears the CLI',
@@ -186,21 +248,24 @@ data.pushHelpText([
     ' - reload __________________ Reloads the page / f5',
     ' - exit ____________________ If browser allows will close the tab',
 ]);
-// Algorighm list
-data.pushAlgorithmList([
+// Data structures list
+data.pushDSList([
     'bst',
     'binary-search-tree',
     'linked-list',
     'll',
+    'hash-map',
+    'hm',
 ]);
 
-data.pushAlgorithmText([
-    'Available algorithms:',
+data.pushDSText([
+    'Available data structures:',
     '   ',
     ' - binary-search-tree',
     ' - linked-list',
+    ' - hash-map',
     '   ',
-    'To select an algorithm type run [algorithm name]',
+    'To select a data structure type run [data structure name]',
     '   ',
     '   example:',
     '   run binary-search-tree',
@@ -1041,3 +1106,425 @@ Adding a new node to the beginning of a linked list involves creating a new node
 Removing a node from a linked list involves updating the next pointer of the node before the node to be removed to point to the node after the one being removed, effectively bypassing the node to be removed.
 
 Linked lists are used in various applications, including implementing stacks, queues, and adjacency lists for graphs. They are also used in memory allocation and dynamic memory management.`);
+
+data.pushHM_whatIs(`
+A hash map, also known as a hash table or associative array, is a data structure that stores key-value pairs. It uses a hash function to compute an index into an array of buckets or slots, from which the desired value can be found.
+
+One of the key features of a hash map is its ability to quickly retrieve values based on their keys. The hash function is used to map the key to a specific location in the underlying array, allowing for constant-time (O(1)) average-case lookup complexity.
+
+Hash maps are widely used because of their efficiency in storing and retrieving data. They are particularly useful when the number of keys is large, as they can provide fast access to values without the need for linear search operations.
+
+In a hash map, each key is unique, and the hash function should ideally distribute keys evenly across the available buckets to minimize collisions, where two different keys map to the same index. Collisions can be handled using various techniques, such as chaining (each bucket stores a linked list of key-value pairs) or open addressing (probing for an empty slot in the array).
+
+Hash maps are commonly used in programming for tasks such as caching, indexing, and implementing associative arrays. They offer efficient insertion, deletion, and lookup operations, making them a versatile and essential data structure in many applications.`);
+
+data.pushHM_code(
+    `// ====================[ Hash Map ]==================== //
+    class HashMap {
+        constructor(size = 16) {
+            this.size = size;
+            this.bucket = new Array(size)
+                .fill()
+                .map(() => new LinkedList());
+            this.loadFactor = 0.75;
+        }
+    
+        getSize() {
+            return this.size;
+        }
+    
+        newHashMap(size) {
+            this.clear();
+            this.size = size;
+            this.bucket = new Array(size)
+                .fill()
+                .map(() => new LinkedList());
+        }
+    
+        // Self imposed bucket limit
+        index(hash) {
+            if (hash < 0 || hash >= this.size) {
+                throw new Error('Trying to access index out of bound');
+            } else {
+                return hash;
+            }
+        }
+    
+        // Method for generating hash code
+        hash(key) {
+            let hashCode = 0;
+            const primeNumber = 31;
+    
+            for (let i = 0; i < key.length; i++) {
+                hashCode = primeNumber * hashCode + key.charCodeAt(i);
+                hashCode %= this.size;
+            }
+    
+            return hashCode;
+        }
+    
+        // Method for assigning key & value to the hash key
+        set(key, value) {
+            const index = this.index(this.hash(key));
+            if (this.bucket[index].checkDuplicate(key)) {
+                this.bucket[index].updateValue(key, value);
+            } else {
+                this.bucket[index].insertNode(key, value);
+            }
+        }
+    
+        // Method for printing values inside a bucket
+        printBucketData(index, keysArray, color) {
+            let head = '';
+            let linkedList = '';
+            const listsEl = [];
+    
+            if (!index) {
+                this.bucket.forEach((list, index) => {
+                    head = list.head;
+                    linkedList = this.toStringRedGreen(keysArray, head, color, index);
+                    listsEl.push(linkedList);
+                });
+            } else {
+                listsEl.push(this.bucket[index].printData());
+            }
+            return listsEl;
+        }
+    
+        // Method for printing the linked list with highlighted values
+        toStringRedGreen(keysArray, head, color = 'red', index) {
+            const parent = createDiv(['linked-list-display-div', 'cli-text', 'hash-map-print'], '');
+            const elementArr = [];
+            const llIndex = index + 1;
+            let indent = '0';
+            if (parseInt(llIndex) >= 10) {
+                indent = '';
+            }
+    
+            let arr = keysArray;
+            if (!head) {
+                elementArr.push(createPara(\`<br>[Hash: \${indent}\${llIndex}]-▶ \`, ['hash-map-print', 'cli-text', 'hash-map-head'], '', 'para'));
+                appendChildren(parent, elementArr);
+                return parent;
+            }
+            if (!Array.isArray(keysArray)) {
+                arr = [keysArray];
+            }
+    
+            // Converts all values inside the array into string for evaluation
+            if (arr) arr = arr.map((key) => String(key));
+            const classListColored = ['hash-map-print', 'cli-text'];
+            const classList = ['hash-map-print', 'cli-text'];
+            const headClassList = ['hash-map-print', 'cli-text', 'hash-map-head'];
+            let current = head;
+            const trueOrFalse = (isHighlighted) => isHighlighted >= 0;
+    
+            // Color selector
+            if (color === 'red') classListColored.push('ll-red');
+            if (color === 'green') classListColored.push('ll-green');
+            if (color === 'remove-all') {
+                classListColored.push('ll-red');
+                classList.push('ll-red');
+            }
+    
+            // Handle the head element, matches the value inside array
+            // Prints head value in red color, else print normal > pushes to element Arr
+            // If element not found in the arr return -1 and compare to -1
+            // if element is found in the array it wil return index and will go in if statement
+            let keyFound = arr.indexOf(current.key.toString());
+            let isHighlighted = trueOrFalse(keyFound);
+    
+            if (isHighlighted) {
+                elementArr.push(createPara(\`<br>[Hash: \${indent}\${llIndex}]-▶ \`, headClassList, '', 'para'));
+                elementArr.push(createPara(\`(\${current.key}, \${current.value})\`, classListColored, '', 'para'));
+                elementArr.push(createPara('─>', classList, '', 'para'));
+            } else {
+                elementArr.push(createPara(\`<br>[Hash: \${indent}\${llIndex}]-▶ \`, headClassList, '', 'para'));
+                elementArr.push(createPara(\`(\${current.key}, \${current.value})─>\`, classList, '', 'para'));
+            }
+    
+            if (!current.nextNode) {
+                elementArr.push(createPara('[X]', classList, '', 'para'));
+                appendChildren(parent, elementArr);
+                return parent;
+            }
+            current = current.nextNode;
+    
+    
+            while (current.nextNode !== null) {
+                // Looks for value > translates to true or false
+                keyFound = arr.indexOf(current.key.toString());
+                isHighlighted = trueOrFalse(keyFound);
+    
+                if (isHighlighted) {
+                    elementArr.push(createPara(\`(\${current.key}, \${current.value})\`, classListColored, '', 'para'));
+                    elementArr.push(createPara('─>', classList, '', 'para'));
+                } else {
+                    elementArr.push(createPara(\`(\${current.key}, \${current.value})─>\`, classList, '', 'para'));
+                }
+                current = current.nextNode;
+            }
+    
+            keyFound = arr.indexOf(current.key.toString());
+            isHighlighted = trueOrFalse(keyFound);
+    
+            if (isHighlighted) {
+                elementArr.push(createPara(\`(\${current.key}, \${current.value})\`, classListColored, '', 'para'));
+                elementArr.push(createPara('─>', classList, '', 'para'));
+            } else {
+                elementArr.push(createPara(\`(\${current.key}, \${current.value})─>\`, classList, '', 'para'));
+            }
+    
+            elementArr.push(createPara('[X]', classList, '', 'para'));
+            appendChildren(parent, elementArr);
+    
+            return parent;
+        }
+    
+        // Method that gets the value of the key if the key is present in the hash map.
+        get(key) {
+            let isFound = false;
+            let txt = \`\${key} not found\`;
+            this.bucket.forEach((LinkedList, index) => {
+                let current = LinkedList.head;
+    
+    
+                while (current !== null) {
+                    if (current.key === key) {
+                        txt = \`Hash: \${index} Key: \${key} Value: \${current.value}\`;
+                        isFound = true;
+                        break;
+                    }
+                    current = current.nextNode;
+                }
+            });
+            return [isFound, txt];
+        }
+    
+        // Method that checks if the key is present in the hash map, returns true if present, false if not.
+        has(key) {
+            let isPresent = false;
+            this.bucket.forEach((LinkedList) => {
+                let current = LinkedList.head;
+                while (current !== null) {
+                    if (key === current.key) {
+                        isPresent = true;
+                        break;
+                    }
+    
+                    current = current.nextNode;
+                }
+            });
+    
+            if (isPresent !== true) {
+                return false;
+            }
+            return true;
+        }
+    
+        // Removes the key from the hash map
+        remove(key) {
+            const index = this.index(this.hash(key));
+            let previous;
+            let current = this.bucket[index].head;
+    
+            if (current.key === key) {
+                if (current.nextNode === undefined || current.nextNode === null) {
+                    this.bucket[index].head = null;
+                    return true;
+                }
+    
+                this.bucket[index].head = current.nextNode;
+            } else {
+                previous = current;
+                current = current.nextNode;
+                while (current !== null) {
+                    if (current.key === key) {
+                        previous.nextNode = current.nextNode;
+                        return true;
+                    }
+                    previous = current;
+                    current = current.nextNode;
+                }
+            }
+        }
+    
+        // Return the number of keys inside the hash map
+        length() {
+            let numOfKeys = 0;
+            this.bucket.forEach((LinkedList) => {
+                let current = LinkedList.head;
+                while (current !== null) {
+                    numOfKeys++;
+                    current = current.nextNode;
+                }
+            });
+        }
+    
+        // Removes all entries in the hash map
+        clear() {
+            this.bucket.forEach((LinkedList) => {
+                LinkedList.head = null;
+            });
+        }
+    
+        // Returns an array containing all the keys inside the hash map
+        keys() {
+            const keys = [];
+            let temp = [];
+            let current;
+            this.bucket.forEach((LinkedList, index) => {
+                temp = [];
+                current = LinkedList.head;
+                while (current !== null) {
+                    temp.push(current.key);
+    
+                    current = current.nextNode;
+                }
+                keys.push([index, temp]);
+            });
+    
+            return keys;
+        }
+    
+        // Returns an array containing all the values inside the hash map
+        values() {
+            const values = [];
+            let temp = [];
+            let current;
+            this.bucket.forEach((LinkedList, index) => {
+                temp = [];
+                current = LinkedList.head;
+                while (current !== null) {
+                    temp.push(current.value);
+    
+                    current = current.nextNode;
+                }
+                values.push([index, temp]);
+            });
+    
+            return values;
+        }
+    
+        // Returns an array that contains each key / value pair
+        entries() {
+            const entries = [];
+            let temp = [];
+            let current;
+            this.bucket.forEach((LinkedList, index) => {
+                temp = [];
+                current = LinkedList.head;
+                while (current !== null) {
+                    temp.push([current.key, current.value]);
+    
+                    current = current.nextNode;
+                }
+                entries.push([index, temp]);
+            });
+    
+            return entries;
+        }
+    }
+    // ====================[ \Hash Map ]==================== //
+    
+    
+    // ====================[ Linked List ]==================== //
+    class LinkedList {
+        constructor() {
+            this.head = null;
+            this.size = 0;
+        }
+    
+        // Inserts a new node into the linked list
+        insertNode(newKey, newValue) {
+            const newNode = new Node(newKey, newValue, this.head);
+            this.head = newNode;
+            this.size++;
+            return newNode;
+        }
+    
+        // Prints all the data from the linked list
+        printData() {
+            if (this.head === null) {
+            } else {
+                let current = this.head;
+                while (current !== null) {
+                    current = current.nextNode;
+                }
+            }
+        }
+    
+        // Looks for existing key inside the linked list
+        checkDuplicate(key) {
+            let current = this.head;
+            while (current !== null) {
+                if (current.key === key) {
+                    return true;
+                }
+    
+                current = current.nextNode;
+            }
+    
+            return false;
+        }
+    
+        // Method for updaing the new value
+        updateValue(key, newValue) {
+            let current = this.head;
+            while (current !== null) {
+                if (current.key === key) {
+                    current.value = newValue;
+                    return;
+                }
+    
+                current = current.nextNode;
+            }
+        }
+    }
+    // ====================[ \Linked List ]==================== //
+    
+    
+    // ====================[ Node ]==================== //
+    class Node {
+        constructor(key = null, value = null, nextNode = null) {
+            this.key = key;
+            this.value = value;
+            this.nextNode = nextNode;
+        }
+    }
+    // ====================[ \Node ]==================== //`,
+);
+
+data.pushHM_randomKeys(
+    [
+        'Pikachu', 'Charizard', 'Bulbasaur', 'Squirtle', 'Mewtwo',
+        'Leonardo da Vinci', 'Albert Einstein', 'Marie Curie', 'Isaac Newton', 'Galileo Galilei',
+        'Napoleon Bonaparte', 'Alexander the Great', 'Julius Caesar', 'Genghis Khan', 'Cleopatra',
+        'Marilyn Monroe', 'Elvis Presley', 'Michael Jackson', 'Madonna', 'Beyoncé',
+        'Gandalf', 'Frodo Baggins', 'Harry Potter', 'Dumbledore', 'Hermione Granger',
+        'Doge', 'Pepe the Frog', 'SpongeBob SquarePants', 'Rick Astley', 'Trollface',
+        'Mickey Mouse', 'Donald Duck', 'Goofy', 'Winnie the Pooh', 'Sonic the Hedgehog',
+        'Bruce Lee', 'Jackie Chan', 'Chuck Norris', 'Arnold Schwarzenegger', 'Jet Li',
+        'Coco Chanel', 'Audrey Hepburn', 'Grace Kelly', 'Marilyn Monroe', 'Elizabeth Taylor',
+        'Charlie Chaplin', 'Buster Keaton', 'Mae West', 'Groucho Marx', 'Laurel and Hardy',
+    ],
+);
+
+data.pushHM_randomValues(
+    [
+        42, 7, 13, 3.14, 100,
+        2022, 555, 987, 1234, 777,
+        314159, 27182, 161803, 299792, 667,
+        9.81, 6.67e-11, 1.602e-19, 6.02e23, 6.626e-34,
+        1.618, 2.718, 3.14159, 0.577, 0.693,
+        101, 404, 200, 500, 1000,
+        123, 456, 789, 987, 654,
+        555, 777, 999, 111, 333,
+        2, 4, 6, 8, 10,
+        11, 22, 33, 44, 55,
+    ],
+);
+
+console.log('LENGTHS');
+console.log(data.HM_randomKeys.length);
+console.log(data.HM_randomValues.length);

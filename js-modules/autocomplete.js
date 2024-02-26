@@ -78,28 +78,31 @@ function getCmdList(command, array) {
     return arr;
 }
 
-function getAlgorithmList() {
+function getDSList() {
     return [
         'bst',
         'binary-search-tree',
         'linked-list',
         'll',
+        'hash-map',
+        'hm',
     ];
 }
 
-export function getRandomAlgorithm() {
-    const rand = Math.floor(Math.random() * 4);
-    const algos = getAlgorithmList();
-    return algos[rand];
+export function getRandomDS() {
+    const ds = getDSList();
+    const rand = Math.floor(Math.random() * (ds.length - 1));
+    return ds[rand];
 }
 
 
 const themeCommands = getCmdList('theme', themes.getThemesList());
-const algorithmCommands = getCmdList('run', getAlgorithmList());
+const dataStructureCommands = getCmdList('run', getDSList());
 const keywordsArr = [
     'help',
     'run',
-    'algorithms',
+    'ds',
+    'data-structures',
     'clear',
     'git',
     'themes',
@@ -110,13 +113,14 @@ const keywordsArr = [
     'animation stop',
     'theme random',
     'random theme',
-    'random algorithm',
+    'random ds',
+    'random data-structure',
     'reload',
     'exit',
     'fullscreen',
     'clear display',
     ...themeCommands,
-    ...algorithmCommands,
+    ...dataStructureCommands,
 ];
 keywordsArr.sort();
 const autocomplete = new Autocomplete(keywordsArr);

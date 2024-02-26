@@ -4,7 +4,7 @@ import { getData } from './data.js';
 import { getDisplay } from './display-module.js';
 import { getHistory } from './history-tracker.js';
 import { getThemes } from './themes.js';
-import { getAutocomplete, getRandomAlgorithm } from './autocomplete.js';
+import { getAutocomplete, getRandomDS } from './autocomplete.js';
 import {
     createDiv, createPara, createLink, appendChildren,
 } from './element-builder.js';
@@ -19,7 +19,7 @@ const autocomplete = getAutocomplete();
 const cliSection = document.getElementById('cli-section');
 
 export default class CLIComponent {
-    constructor(elementId, userType = 'guest', userName = 'cli-algorithms') {
+    constructor(elementId, userType = 'guest', userName = 'cli-data-structures') {
         this.cli = document.getElementById(elementId);
         this.userType = userType;
         this.userName = userName;
@@ -62,7 +62,7 @@ export default class CLIComponent {
             if (input) {
                 setTimeout(() => {
                     this.createInput();
-                }, 2650);
+                }, 2850);
             }
         }, 2500);
 
@@ -176,25 +176,25 @@ export default class CLIComponent {
         this.cli.appendChild(para);
     }
 
-    // Displays algorith list on the screen
-    displayAlgorithms() {
+    // Displays DS list on the screen
+    displayDataStructures() {
         const para = document.createElement('pre');
         para.classList.add('cli-text');
         para.classList.add('cli-mar-left-2rem');
-        para.innerHTML = data.getData('algorithm-text', 0);
+        para.innerHTML = data.getData('data-structure-text', 0);
 
         this.cli.appendChild(para);
     }
 
-    // Informs the user of invalid algorithm name
-    algorithmNotFound(parameter, para) {
+    // Informs the user of invalid DS name
+    dataStructureNotFound(parameter, para) {
         if (parameter === undefined) {
-            para.innerHTML = 'Please enter the name of the algorithm and try again<br>    example:<br>    run binary-search-tree';
+            para.innerHTML = 'Please enter the name of the data structure and try again<br>    example:<br>    run binary-search-tree';
             para.classList.add('cli-text');
             para.classList.add('cli-mar-left-2rem');
             this.cli.appendChild(para);
         } else {
-            para.innerHTML = `${parameter}: algorithm not found`;
+            para.innerHTML = `${parameter}: data structure not found`;
             para.classList.add('cli-text');
             para.classList.add('cli-mar-left-2rem');
             this.cli.appendChild(para);
@@ -247,9 +247,10 @@ export default class CLIComponent {
             this.run(parameter, para);
             break;
 
-        // Algorithms
-        case 'algorithms':
-            this.displayAlgorithms();
+        // Data-structures
+        case 'ds':
+        case 'data-structures':
+            this.displayDataStructures();
             break;
 
         // Clear
@@ -261,7 +262,7 @@ export default class CLIComponent {
 
         // Git
         case 'git':
-            this.printGit('https://github.com/NikolaMilinkovic/CLI-Algorithms', 'NikolaMilinkovic/CLI-Algorithms', '         ');
+            this.printGit('https://github.com/NikolaMilinkovic/CLI-Algorithms', 'NikolaMilinkovic/CLI-Data-Structures', '         ');
             break;
 
         // Themes
@@ -314,7 +315,8 @@ export default class CLIComponent {
         case 'random':
             if (parameter !== undefined && parameter !== '') {
                 if (parameter === 'theme') this.setTheme(parameter, command, para);
-                if (parameter === 'algorithm') this.run(getRandomAlgorithm(), para);
+                else if (parameter === 'data-structure' || parameter === 'ds') this.run(getRandomDS(), para);
+                else this.commandNotFound(parameter, para);
             }
             break;
 
@@ -390,11 +392,11 @@ export default class CLIComponent {
 
     // Handles the run command
     run(parameter, para) {
-        const algorithmList = data.getData('algorithm-list', 0);
-        // If parameter is found inside algorithmList
-        if (algorithmList.includes(parameter)) display.display(parameter);
+        const DSList = data.getData('data-structure-list', 0);
+        // If parameter is found inside DSList
+        if (DSList.includes(parameter)) display.display(parameter);
         // If perameter is not found write out error
-        else this.algorithmNotFound(parameter, para);
+        else this.dataStructureNotFound(parameter, para);
     }
 
     // Method for printing link to project git repo

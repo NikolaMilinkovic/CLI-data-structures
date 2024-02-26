@@ -95,3 +95,27 @@ export function createImg(src = '', classArr = [], id = '') {
 
     return img;
 }
+
+
+export function createDropdownList(elements, selected, classArr, id) {
+    const dl = document.createElement('select');
+
+    if (id) dl.setAttribute('id', id);
+    if (classArr) {
+        classArr.forEach((className) => {
+            dl.classList.add(className);
+        });
+    }
+
+
+    elements.forEach((element, index) => {
+        const option = document.createElement('option');
+        option.value = index + 1;
+        option.text = element;
+        dl.appendChild(option);
+    });
+
+    dl.selectedIndex = selected;
+
+    return dl;
+}

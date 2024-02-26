@@ -172,7 +172,7 @@ class HashMap {
 
             while (current !== null) {
                 if (current.key === key) {
-                    txt = `Hash: ${index} Key: ${key} Value: ${current.value}`;
+                    txt = `Hash: ${index + 1} Key: ${key} Value: ${current.value}`;
                     isFound = true;
                     break;
                 }

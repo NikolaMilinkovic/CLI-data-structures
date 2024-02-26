@@ -59,7 +59,7 @@ export default class Data {
             return text;
 
         case 'what-is-hm':
-            text = this.getLL_whatIs();
+            text = this.getHM_whatIs();
             return text;
 
         default:
@@ -1105,7 +1105,7 @@ Adding a new node to the beginning of a linked list involves creating a new node
 
 Removing a node from a linked list involves updating the next pointer of the node before the node to be removed to point to the node after the one being removed, effectively bypassing the node to be removed.
 
-Linked lists are used in various applications, including implementing stacks, queues, and adjacency lists for graphs. They are also used in memory allocation and dynamic memory management.`);
+Linked lists are used in various applications, including implementing stacks, queues, and adjacency lists for graphs. They are also used in memory allocation and dynamic memory mwhat-is-anagement.`);
 
 data.pushHM_whatIs(`
 A hash map, also known as a hash table or associative array, is a data structure that stores key-value pairs. It uses a hash function to compute an index into an array of buckets or slots, from which the desired value can be found.

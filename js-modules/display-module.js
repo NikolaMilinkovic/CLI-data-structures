@@ -1052,8 +1052,8 @@ export default class DisplaySection {
     HM_insertRemoveControls() {
         const div = createDiv(['linked-list-control-div', 'grid-1-3-1'], '');
         const divInputs = createDiv(['linked-list-control-div', 'grid-1-1'], '');
-        const buttonInsert = createButton('Insert', ['hm-btn', 'margin-right-2rem'], 'btn-insert-hash-map');
-        const buttonRemove = createButton('Remove', ['hm-btn', 'margin-left-2rem'], 'btn-remove-hash-map');
+        const buttonInsert = createButton('Insert', ['hm-btn', 'margin-right-2rem', 'width-180'], 'btn-insert-hash-map');
+        const buttonRemove = createButton('Remove', ['hm-btn', 'margin-left-2rem', 'width-180'], 'btn-remove-hash-map');
 
         const inputKey = createInput('key', ['bst-input', 'll-insert-input'], 'input-insert-key-hash-map');
         inputKey.autocomplete = 'off';
@@ -1101,7 +1101,7 @@ export default class DisplaySection {
     }
 
     HM_newHashMapControls() {
-        const div = createDiv(['display-flex'], '');
+        const div = createDiv(['display-flex', 'grid-1-3-1'], '');
         const divNewHashMap = createDiv(['display-flex'], '');
         const divCurrentSize = createDiv(['display-flex'], '');
         const buttonNewHm = createButton('Create new hash map', ['hm-btn', 'margin-right-2rem', 'width-180'], 'btn-new-hash-map');

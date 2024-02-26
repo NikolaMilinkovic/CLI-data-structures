@@ -52,7 +52,7 @@ table {
 
 :root{
 
-    --font-size: 16px;
+    --font-size: clamp(16px, 18px, 22px);
     --font-family: 'Consolas', 'Menlo', monospace;
 
 
@@ -110,6 +110,7 @@ section{
     border-right: 1px solid var(--border-color);
     padding-right: clamp(20px,1rem,5vh);
     overflow: auto;
+    overflow-x: hidden;
 }
 #display-section{
     padding-left: clamp(20px,1rem,5vh);
@@ -197,3 +198,29 @@ a{
     pointer-events: none;
     z-index: -2;
 }
+
+/* Responsive design settings */
+@media screen and (max-width: 1650px) {
+    #content{
+        display: grid;
+        grid-template-columns: 1fr;
+        min-height: 85vh;
+        overflow: auto;
+    }
+    #cli-section{
+        border-right: 1px solid var(--border-color);
+        padding-right: clamp(20px,1rem,5vh);
+        overflow: auto;
+        min-height: inherit;
+        /* overflow-x: hidden; */
+    }
+    #display-section{
+        padding-left: clamp(20px,1rem,5vh);
+        display: grid;
+        overflow: auto;
+        grid-template-rows: var(--grid-template-rows);
+        height: inherit;
+        min-height: inherit;
+    }
+  }
+/* \Responsive design settings */

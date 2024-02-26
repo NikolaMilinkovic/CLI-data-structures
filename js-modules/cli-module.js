@@ -18,17 +18,32 @@ const autocomplete = getAutocomplete();
 
 const cliSection = document.getElementById('cli-section');
 
+
+function getUserName() {
+    if (window.innerWidth < 700) {
+        return 'cli-ds';
+    }
+    return 'cli-data-structures';
+}
+
 export default class CLIComponent {
     constructor(elementId, userType = 'guest', userName = 'cli-data-structures') {
         this.cli = document.getElementById(elementId);
         this.userType = userType;
-        this.userName = userName;
+        this.userName = getUserName();
     }
 
     // Handles innitializing the cli section
     init() {
         this.displayHero(true);
         // this.createInput();
+    }
+
+    updateUserOnResize() {
+        if (window.innerWidth < 700) {
+            this.userName = 'cli-ds';
+        }
+        this.userName = 'cli-data-structures';
     }
 
     // =====================================[HERO METHODS]===================================== //
@@ -532,3 +547,6 @@ cliSection.addEventListener('click', () => {
 export function getCLI() {
     return CLI;
 }
+window.addEventListener('resize', () => {
+    CLI.updateUserOnResize();
+});

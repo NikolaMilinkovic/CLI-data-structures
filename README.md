@@ -1,2 +1,2 @@
-# CLI-Algorithms
-Live link: https://nikolamilinkovic.github.io/CLI-Algorithms/
+# CLI-Data-Structures
+Live link: [CLI-data-structures](https://nikolamilinkovic.github.io/CLI-data-structures/)
